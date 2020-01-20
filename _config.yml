@@ -1,0 +1,18 @@
+# Jekyll configuration
+
+name: LostMyPlaintext
+description: LostMyPlaintext
+baseurl: ''
+## default date_format
+date_format: 
+  title: "%B-%-d-%Y"
+# Language
+lan: "en" 
+
+paginate: 3
+
+highlighter: rouge
+markdown: kramdown
+gems: ['jekyll-paginate']
+
+exclude: ['README.md', 'LICENSE', "*.bak"]
