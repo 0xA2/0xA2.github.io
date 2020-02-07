@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Cryptopals Challenges Set 1 - Solutions"
-description: "Written in Python 3 (code only)"
+description: "[write-up] Written in Python 3 (code only)"
 ---
 
 Challenge 1:
