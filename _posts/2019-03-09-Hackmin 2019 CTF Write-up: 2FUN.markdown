@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "nullcon HackIM 2019 CTF Write-up: 2FUN"
-description: "[write-up] Meet in the middle attack on 2DES like cipher"
+description: "[write-up] Meet in the middle attack on 2DES-like cipher"
 ---
 
 <img class="card-img-top" src="/assets/images/nullcon.png" alt="Card image cap">
