@@ -2,6 +2,7 @@
 layout: post
 title: "Midnight Sun CTF 2019 Quals Write-Up: open-gyckel-crypto"
 description: "[write-up] Fun RSA/Math challenge"
+categories: "Writeups"
 ---
    
 
