@@ -2,6 +2,9 @@
 layout: default
 ---
 {% assign trans = site.data.values[site.lan] %}
+{% if page.url == "/" %}
+<div class="well article">  <p><h2>Blog - Latest Posts</h2></p>  </div>
+{% endif %}
 {% for post in paginator.posts %}
 <div class="well article">
 
@@ -34,3 +37,4 @@ layout: default
     <a class="btn btn-default" href="{{ site.baseurl}}/page{{ paginator.next_page }}" class="next">Older</a>
   {% endif %}
 </div>
+
