@@ -2,6 +2,7 @@
 layout: post
 title: "Hacktm CTF Quals - RSA is easy"
 description: "[write-up] A couple of RSA challenges from Hacktm CTF Quals 2020"
+categories: "Writeups"
 ---
 
 <p><b>RSA is Easy - Part I</b></p>
