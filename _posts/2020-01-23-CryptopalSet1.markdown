@@ -2,6 +2,7 @@
 layout: post
 title: "Cryptopals Challenges Set 1 - Solutions"
 description: "[write-up] Written in Python 3 (code only)"
+categories: "Cryptopals"
 ---
 
 Challenge 1:
