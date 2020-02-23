@@ -2,6 +2,7 @@
 layout: post
 title: "TamuCTF Cryto Write-ups"
 description: "[write-up] Write-ups for all cryptography challenges from TamuCTF 2019"
+categories: "Writeups"
 ---
   <body>
 
