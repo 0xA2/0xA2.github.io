@@ -21,7 +21,7 @@ categories: "Writeups"
           <h1 class="my-4"><font color="black">Midnight Sun CTF 2019 Quals Write-up</font></h1>
 
           <!-- Image -->
-          <img class="card-img-top" src="../../../assets/images/gyckel.png" alt="Card image cap">
+          <img class="card-img-top" src="/../../../assets/images/gyckel.png" alt="Card image cap">
           <div class="card mb-4">
             <div class="card-body">
               <p></p>
