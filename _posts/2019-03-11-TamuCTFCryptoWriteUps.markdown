@@ -18,12 +18,12 @@ categories: "Writeups"
          
 
           <!-- Image -->
-          <img class="card-img-top" src="../../../assets/images/tamu.png" alt="Card image cap">
+          <img class="card-img-top" src="/../../../assets/images/tamu.png" alt="Card image cap">
           <div class="card mb-4">
             <div class="card-body">
               
               <p class="lead"><p>TamuCTF 2019 crypto challenges</p>
-                <img src="../../../assets/images/morse.jpg">
+                <img src="/../../../assets/images/morse.jpg">
           	</p>
        		     <p>Judging from the name of the challenge and from the contents of flag.txt this seems to be a simple morse code challenge.</p>
 
@@ -50,7 +50,7 @@ categories: "Writeups"
         <p></p>
         <p><b>Flag: gigem{C1icK_cl1CK-y0u_h4v3_m4I1}</b></p>
         <p></p>
-        <img src="../../../assets/images/RSAyyy.jpg">
+        <img src="/../../../assets/images/RSAyyy.jpg">
         <p></p>
         <p>This is a good example of the most accessible RSA challenge one can find. Since n = 2531257, it's small enough to factor very quickly even with a simple factoring algorithm. After factoring <b>n</b> and obtaining the values for <b>p</b> and <b>q</b> all we need to do to solve the challenge is implemente some RSA math. As a quick reminder we recover our plaintext message <b>m</b> by applying the formula <b>"m = C<sup>d</sup> mod n"</b> where <b>d</b> is the modular inverse of <b>e</b>(in this case 43), <b>phi(n)</b>. In other words we must find an integer <b>d</b> such that <b>d*e = 1 mod phi(n)</b>. In the context of RSA we can think of <b>phi(n)</b> simply as being equal to <b>"(p-1)*(q-1)"</b> since both <b>p</b> and <b>q</b> must be prime.</p>
 
@@ -107,7 +107,7 @@ categories: "Writeups"
           <p></p>
           <p><b>Flag: gigem{Savage_Six_Flying_Tigers}</b></p>
           <p></p>
-          <img src="../../../assets/images/smile.jpg">
+          <img src="/../../../assets/images/smile.jpg">
           <p></p>
           <p>For this challenge we only get the base64 encoded string: <b>XUBdTFdScw5XCVRGTglJXEpMSFpOQE5AVVxJBRpLT10aYBpIVwlbCVZATl1WTBpaTkBOQFVcSQdH</b>. This usually screams <b>single-byte xor</b> which was what I initially tried. But that didn't work. The next most likely candidate is <b>repeating-key xor</b>. And in fact if you xor the first bytes of the flag, which we know are "gigem{", with the decoded version of the given base64 string we get ":):):)" as a result. Therefore ":)" must be our key.</p>
 
@@ -131,7 +131,7 @@ categories: "Writeups"
           <p><b>Flag: gigem{I'm not superstitious, but I am a little stitious.}</b></p>
 
   <p></p>
-          <img src="../../../assets/images/knapsack.jpg">
+          <img src="/../../../assets/images/knapsack.jpg">
           <p></p>
           <b><p>Cipher text: 11b90d6311b90ff90ce610c4123b10c40ce60dfa123610610ce60d450d000ce61061106110c4098515340d</p>
           4512361534098509270e5d09850e58123610c9</b>
@@ -141,12 +141,12 @@ categories: "Writeups"
       		 The basic theory behind it consists on taking advantage of the subset sum problem to make decryption hard. You start by choosing a superincreasing sequence <b>w</b> of size equal to the message you want to encrypt in bits. You them choose some integer <b>q</b> such that <b>q</b> is greater than the sum of all elements of <b>w</b> and some integer <b>r</b> such that <b>q</b> and <b>r</b> are <a href="https://en.wikipedia.org/wiki/Coprime" target="_blank">coprime</a>. The private key consists of (<b>w</b>,<b>q</b>,<b>r</b>). To generate the public key create a new sequence by taking each element of <b>w</b> and calculaing <b>w<sub>i</sub>*r mod q</b> </p>
       		 <p>(Quick and easy to understand example from wikipedia)</p>
       		 <p><b>Generating the private and public keys:</b></p>
-      		 <img src="../../../assets/images/MHKkeygen.png">
+      		 <img src="/../../../assets/images/MHKkeygen.png">
       		 <p></p>
       		 <p><b>Encryption: </b></p>
-      		 <img src="../../../assets/images/MHKenc.png">
+      		 <img src="/../../../assets/images/MHKenc.png">
       		 <p><b>Decryption: </b></p>
-      		 <img src="../../../assets/images/MKHdec.png">
+      		 <img src="/../../../assets/images/MKHdec.png">
       		 <p>This is great and all but what about the challenge? Well it's actually rather simple, since we're given a small key one possible solution is to generate all possible cipher text values for an 8-bit plaintext.</p> 
       		 <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">bfct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
 
@@ -191,9 +191,9 @@ categories: "Writeups"
 </pre></div>
 			<p></p>
 			<p></p>
-          <img src="../../../assets/images/curve.jpg">
+          <img src="/../../../assets/images/curve.jpg">
           <p>In this challenge we're given a pcap file containing network traffic from a series of communications between two people, <b>192.168.11.4</b> and <b>192.168.11.7</b>. Let's stick with the norm and call them Alice and Bob respectively. </p>
-          <img src="../../../assets/images/pcap.png">
+          <img src="/../../../assets/images/pcap.png">
           <p></p>
           <p>There are two packets that immediatly stand out due to their lenght. Alice and Bob seem to be exchanging certificates in plaintext. When we base64 decode them we get the following result from the one sent by Alice: </p>
           <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #ae81ff">Certificate</span><span style="color: #f8f8f2">:</span>
