@@ -5,19 +5,19 @@ layout: default
 <div class="well article"><h2>Posts by Category</h2></div>
 
 <div class="well article">
-{% assign sortedcategories = site.categories | sort %}
-{% for category in sortedcategories %}
-    <h2>{{ category[0] | capitalize }}</h2>
-    <ul>
-        {% assign pages_list = category[1] %}
-        {% for node in pages_list %}
-            {% if node.title != null %}
-            {% if group == null or group == node.group %}
-                <li></span><a href="{{ site.baseurl}}{{ node.url }}"> {{ node.title }}</a></li>
-            {% endif %}
-            {% endif %}
-        {% endfor %}
-        {% assign pages_list = nil %}
-    </ul>
-{% endfor %}    
+<h2>Projects</h2>
+<ul>
+    <li><a href="https://lostmyplaintext.com/project/2020/03/30/Merkle-Hellman-Knapsack-and-LLL.html">Merkle-Hellman knapsack and the LLL algorithm</a></li>
+</ul>
+<h2>CTF Writeups</h2>
+<ul>
+    <li><a href="https://lostmyplaintext.com/writeups/2020/02/04/hacktmCTF_RSAisEasy.html">Hacktm CTF Quals - RSA is easy</a></li>
+    <li><a href="https://lostmyplaintext.com/writeups/2019/04/08/MidnightSunCTF2019.html">Midnight Sun CTF 2019 Quals Write-Up: open-gyckel-crypto</a></li>
+    <li><a href="https://lostmyplaintext.com/writeups/2019/03/09/nullcon-2019-CTF-Write-up-2FUN.html">nullcon HackIM 2019 CTF Write-up: 2FUN</a></li>
+</ul>
+<h2>Cryptopals Solutions</h2>
+<ul>
+    <li><a href="https://lostmyplaintext.com/cryptopals/2020/01/23/CryptopalSet1.html">Cryptopals Challenges Set 1 - Solutions</a></li>
+    <li><a href="https://lostmyplaintext.com/cryptopals/2020/02/16/CryptopalSet2.html">Cryptopals Challenges Set 2 - Solutions</a></li>
+</ul>    
 </div>
