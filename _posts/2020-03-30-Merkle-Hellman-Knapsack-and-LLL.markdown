@@ -80,7 +80,7 @@ categories: "Project"
 <p>The vectors v<sub>1</sub>,...,v<sub>n</sub> form a basis of <b>L</b>.</p>
 <p>Geometrically, a lattice in R<sup>2</sup> would, for example, look somthing like the following:</p>
 
-<img src="/assets/images/plot.png">
+<img src="/../../assets/images/plot.png">
 
 <p>Now let's analyze how we can relate this to breaking the Merkle-Hellman knapsack.</p>
 
