@@ -204,8 +204,8 @@ LLL(M):
 <span style="color: #75715e">#         ### Merkle-Hellman Knapsack Sage 9.0 Version ###         #</span>
 <span style="color: #75715e">#                                                                  #</span>
 <span style="color: #75715e">#  WARNING: I wrote this program to be compatible with Python 3,   #</span>
-<span style="color: #75715e">#           however the &#39;break cipher&#39; feature is only fully    #</span>
-<span style="color: #75715e">#           availiable when ran with sagemath to avoid floating       #</span>
+<span style="color: #75715e">#           however the &#39;break cipher&#39; feature is only fully       #</span>
+<span style="color: #75715e">#           availiable when ran with sagemath to avoid floating    #</span>
 <span style="color: #75715e">#           point limitations. Also, as I&#39;m sure you can tell,     #</span>
 <span style="color: #75715e">#           this cryptosystem can be easily broken and should      #</span>
 <span style="color: #75715e">#           in no circumstance be considered for any serious       #</span>
