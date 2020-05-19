@@ -166,13 +166,13 @@ LLL(M):
 6 |       if abs(W<sub>h,j</sub>) > 1/2:
 7 |          M<sub>h</sub> = M<sub>h</sub> - round(W<sub>hj</sub>)*M<sub>j</sub>
 8 |    V = GS(M) # update V and W
-9 |    W<sub>ij</sub> = inner_product(M<sub>i</sub>,V<sub>j</sub>)/inner_product(V<sub>i</sub>,V<sub>j</sub>) # where the values of i and j are the most current 
+9 |    W<sub>i,j</sub> = inner_product(M<sub>i</sub>,V<sub>j</sub>)/inner_product(V<sub>i</sub>,V<sub>j</sub>) # where the values of i and j are the most current 
 10|    if inner_product(V<sub>h</sub>,V<sub>h</sub>) >= (0.99(***)-(W<sub>h,h-1</sub>)<sup>2</sup>)*inner_product(V<sub>h-1</sub>,V<sub>h-1</sub>):
 11|       h = h + 1
 12|    else:
 13|       swap(M<sub>h</sub>,M<sub>h-1</sub>)
 14|       V = GS(M) # update V and W
-15|       W<sub>ij</sub> = inner_product(M<sub>i</sub>,V<sub>j</sub>)/inner_product(V<sub>i</sub>,V<sub>j</sub>) # where the values of i and j are the most current 
+15|       W<sub>i,j</sub> = inner_product(M<sub>i</sub>,V<sub>j</sub>)/inner_product(V<sub>i</sub>,V<sub>j</sub>) # where the values of i and j are the most current 
 16|       h = max(h-1,1)
 17| return M
 </h4></pre>
