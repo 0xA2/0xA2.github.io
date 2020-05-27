@@ -124,7 +124,8 @@ categories: "Project"
 
 <p>This is where the <b>LLL algorithm</b> (created by <a href="https://en.wikipedia.org/wiki/Arjen_Lenstra">Arjen Lenstra</a>, <a href="https://en.wikipedia.org/wiki/Hendrik_Lenstra">Hendrik Lenstra</a> and <a href="https://en.wikipedia.org/wiki/L%C3%A1szl%C3%B3_Lov%C3%A1sz">László Lovász</a>) comes in. Given a basis for a lattice as input, this algorithm calculates a reduced basis ( a basis with short, and close to orthogonal, vectors) of the same lattice.</p>
 
-<p>If we use the matrix <b>M</b> as input, the LLL algorithm will output short vectors in the lattice spanned by the columns of <b>M</b> meaning that (although not guaranteed) that there is a good enough chance that among those vectors we will find <b>C</b></p>
+<p>If we use the matrix <b>M</b> as input, the LLL algorithm will output short vectors in the lattice spanned by the columns of <b>M</b> meaning that (although it is not guaranteed) there is a good enough chance that among those vectors we will find <b>C</b></p>
+
 
 <p>Consider the following example:</p>
 <p>Suppose Alice publishes the following public key: <b>A = [367, 272, 1753, 708, 17, 1623, 1562, 978]</b>. Bob wants to send the message "01100001" to Alice and uses this public key to encrypt it obtaning the following ciphertext: <b>ct = 3003</b>.</p>
