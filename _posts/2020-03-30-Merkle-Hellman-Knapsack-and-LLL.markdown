@@ -154,7 +154,7 @@ LLL(M) = [0  0  0  2  1  0  0 -1  1]
          [0 -2  1 -1 -1  1  1 -1  0]
 </pre>
 
-<p>Notice how the first eight entries of the first column of the resulting matrix are thr precise message Bob encrypted: "01100001" (which is binary for "a"). Thus the attacker has recovered the original plaintext using nothing but public information.</p>
+<p>Notice how the first eight entries of the first column of the resulting matrix form the precise message Bob encrypted: "01100001" (which is binary for "a"). Thus the attacker has recovered the original plaintext using nothing but public information.</p>
 
 <p>The LLL algorithm:</p>
 <pre><h4>
