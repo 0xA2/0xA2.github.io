@@ -268,15 +268,16 @@ categories: "Cryptopals"
 <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">BLOCK_SIZE</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">16</span>
 
 <span style="color: #66d9ef">def</span> <span style="color: #a6e22e">PKCS7_padding_validation</span><span style="color: #f8f8f2">(pt):</span>
-	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(pt)</span><span style="color: #f92672">%</span><span style="color: #f8f8f2">BLOCK_SIZE</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">0</span> <span style="color: #f92672">and</span> <span style="color: #f8f8f2">pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">&gt;=</span> <span style="color: #f8f8f2">BLOCK_SIZE:</span>
-		<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;Valid padding &gt; &quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">pt</span>
-	<span style="color: #66d9ef">elif</span> <span style="color: #f8f8f2">chr(pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">])</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">(pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">])</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">pt[</span><span style="color: #f92672">-</span><span style="color: #f8f8f2">pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]:]</span> <span style="color: #f92672">and</span> <span style="color: #f8f8f2">pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">&lt;</span> <span style="color: #f8f8f2">BLOCK_SIZE:</span>
-		<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;Valid padding, plaintext &gt; &quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">strip_padding(pt)</span>
+	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(pt)</span><span style="color: #f92672">%</span><span style="color: #f8f8f2">BLOCK_SIZE</span> <span style="color: #f92672">!=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Invalid padding&quot;</span>
 	<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">&gt;=</span> <span style="color: #f8f8f2">BLOCK_SIZE:</span>
+			<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">(b</span><span style="color: #e6db74">&quot;Valid padding &gt; &quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">pt)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()</span>
+
+		<span style="color: #66d9ef">elif</span> <span style="color: #f8f8f2">chr(pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">])</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">(pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">])</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">pt[</span><span style="color: #f92672">-</span><span style="color: #f8f8f2">pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]:]:</span>
+			<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">(b</span><span style="color: #e6db74">&quot;Valid padding, plaintext &gt; &quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">pt)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()</span>
 		<span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Invalid padding!&quot;</span>
 
-<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">strip_padding</span><span style="color: #f8f8f2">(pt):</span>
-	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">pt[:</span><span style="color: #f92672">-</span><span style="color: #f8f8f2">pt[len(pt)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]]</span>
 
 <span style="color: #66d9ef">def</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">():</span>
 	<span style="color: #f8f8f2">pt</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;YELLOW SUBMARINE&quot;</span> 
@@ -285,7 +286,9 @@ categories: "Cryptopals"
 <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">__name__</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;__main__&quot;</span><span style="color: #f8f8f2">:</span>
 	<span style="color: #f8f8f2">main()</span>
 </pre></div>
-<p></p>
+
+
+
 <p>Challenge 16:</p>
 <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">Crypto.Cipher</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">AES</span>
 <span style="color: #f92672">from</span> <span style="color: #f8f8f2">os</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">urandom</span>
