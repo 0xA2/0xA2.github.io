@@ -166,7 +166,7 @@ categories: "Cryptopals"
 <span style="color: #66d9ef">def</span> <span style="color: #a6e22e">enc</span><span style="color: #f8f8f2">(pt):</span>
 	<span style="color: #f8f8f2">pt</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">PKCS7_padding(pt)</span>
 	<span style="color: #f8f8f2">aes</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">new(key,</span> <span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">MODE_ECB)</span>
-	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">aes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encrypt(pt)</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">aes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encrypt(pt</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode())</span>
 
 
 <span style="color: #66d9ef">def</span> <span style="color: #a6e22e">dec</span><span style="color: #f8f8f2">(ct):</span>
