@@ -407,7 +407,7 @@ tr:nth-child(1) {
 <p></p>
 <hr style="border-top:1px solid #28323C;">
 <p><h3>Conclusion and future work</h3></p>
-<p>I ended up taking what I learned from this project and writing a terminal based save file editor that works for all 4th generation Pokemon games, you can find it on my github <a href="https://github.com/0xA2/Pokemon-Lite-Saveditor/"><b>[here's a link if you're interested]</b></a></p>
+<p>I ended up taking what I learned from this project and writing a terminal based save file editor for the 4th generation Pokemon games, you can find it on my github <a href="https://github.com/0xA2/Pokemon-Lite-Saveditor/"><b>[here's a link if you're interested]</b></a></p>
 <p>Current features include:<br>
 	<ul>
 		<li>Editing player name</li>
