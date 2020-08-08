@@ -414,7 +414,7 @@ tr:nth-child(1) {
 		<li>Editing lead Pokemon's species</li>
 		<li>Editing lead Pokemon's ability</li>
 	</ul>
-	Implementing things like the ability to edit a Pokemon's moves for example (which you'd think would be simple considering what we managed so far) is on the TODO list. Speaking of which... when I tried editing moves...
+	Implementing things like the ability to edit a Pokemon's moves for example (which you'd think would be simple considering what we've managed so far) is on the TODO list. Speaking of which... when I tried editing moves...
 </p>
 <p></p>
 <img class="center" src="/assets/images/glitch0.png">
