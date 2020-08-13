@@ -207,7 +207,7 @@ tr:nth-child(1) {
 
 <p></p>
 <p><b>Unshuffling the 32-byte blocks:</b><br>
-	Like we mentioned already, Pokemon data from bytes 0x08 to 0x87 is shuffled into four different blocks (let's call these blocks 0, 1, 2 and 3). First let's undestand how the blocks are shuffled. Using the following formula:<br>
+	Like we mentioned already, Pokemon data from bytes 0x08 to 0x87 is shuffled into four different blocks (let's call these blocks A, B, C and D). First let's undestand how the blocks are shuffled. Using the following formula:<br>
 	<ul>
 		<li>((pv & 0x3E000) >> 0xD) % 24 (where pv is the Pokemon's personality value)</li>
 	</ul>
@@ -376,8 +376,8 @@ tr:nth-child(1) {
 <p></p>
 <p>The idea here is to have the function return a list <b>L</b> of offsets such that:<br>
 	<ul>
-		<li>small_block_offset + lead_Pokemon_offset + 0x08 + L[0] is the first byte in block 0</li>
-		<li>small_block_offset + lead_Pokemon_offset + 0x08 + L[1] is the first byte in block 1</li>
+		<li>small_block_offset + lead_Pokemon_offset + 0x08 + L[0] is the first byte in block A</li>
+		<li>small_block_offset + lead_Pokemon_offset + 0x08 + L[1] is the first byte in block B</li>
 		<li>And so on</li>
 	</ul>
 </p>
