@@ -400,7 +400,7 @@ tr:nth-child(1) {
 	<span style="color: #f8f8f2">data[small_block_offset</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">lead_Pokemon_offset</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">Pokemon_checksum_offset</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">int(bin(sum</span> <span style="color: #f92672">&gt;&gt;</span> <span style="color: #ae81ff">8</span><span style="color: #f8f8f2">)[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:][</span><span style="color: #f92672">-</span><span style="color: #ae81ff">8</span><span style="color: #f8f8f2">:],</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">)</span>
 </pre></div>
 <p></p>
-<p>Finally we have all the tools we need to get a hacker worthy starter</p>
+<p>Finally we have all the tools we need to get a hacker worthy starter:</p>
 <p></p>
 <img class="center" src="/assets/images/starter.png">
 <p></p>
@@ -415,7 +415,7 @@ tr:nth-child(1) {
 		<li>Editing lead Pokemon's species</li>
 		<li>Editing lead Pokemon's ability</li>
 	</ul>
-	Implementing things like the ability to edit a Pokemon's moves for example (which you'd think would be simple considering what we've managed so far) is on the TODO list. Speaking of which... when I tried editing moves...
+	Implementing things like the ability to edit a Pokemon's moves for example (which you'd think would be simple considering what we've managed so far) is on the TODO list. Speaking of which... when I tried editing moves:
 </p>
 <p></p>
 <img class="center" src="/assets/images/glitch0.png">
