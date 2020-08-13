@@ -1,11 +1,11 @@
 ---
 layout: post
 title: "Merkle-Hellman knapsack and the LLL algorithm"
-description: "[project] An implementation of the original Merkle-Hellman knapsack cryptosystem and the algorithm that can break it in polynomial time"
+description: "[project] An ilustrative implementation of the original Merkle-Hellman knapsack cryptosystem and the algorithm that can break it in polynomial time"
 categories: "Project"
 ---
 
-<p>An implementation of the original Merkle-Hellman knapsack cryptosystem and the algorithm that can break it in polynomial time.</p>
+<p>An ilustrative implementation of the original Merkle-Hellman knapsack cryptosystem and the algorithm that can break it in polynomial time.</p>
 <hr style="border-top:1px solid #28323C;">
 <p></p>
 <p><h3>Content:</h3></p>
