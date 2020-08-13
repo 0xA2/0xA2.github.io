@@ -420,4 +420,4 @@ tr:nth-child(1) {
 <p></p>
 <img class="center" src="/assets/images/glitch0.png">
 <p></p>
-<p>No idea why this happened.</p>
+<p>No idea why this happened (also, that was supposed to be a Charizard!).</p>
