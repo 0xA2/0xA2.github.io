@@ -101,6 +101,7 @@ ul {
 	<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
 		<span style="color: #66d9ef">return</span> <span style="color: #ae81ff">0</span>
 </pre></div>
+<p></p>
 <p>... and check if any result different from 0 is a factor of <b>n</b>. If it is we just have to divide <b>n</b> by it and we'll get the other one (because again <b>n</b> is the product of two primes). Having the factors of <b>n</b> all we need to do to get the flag is the usual RSA math:</p>
 <ul>
 	<li>Calculate phi(n) = (p-1)*(q-1)</li>
