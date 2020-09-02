@@ -4,7 +4,7 @@ title: "Hacktm CTF 2020 Quals - RSA is easy"
 description: "[write-up] A couple of RSA challenges from Hacktm CTF Quals 2020"
 categories: "Writeups"
 ---
-
+<title>Hacktm CTF 2020 Quals - RSA is easy - LostMyPlaintext</title>
 <p><b>RSA is Easy - Part I</b></p>
 <p>For the first of two challenges named "RSA is Easy" we're given the follwing files:</p>
 
