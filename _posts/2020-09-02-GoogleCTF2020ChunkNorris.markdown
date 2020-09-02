@@ -79,6 +79,7 @@ ul {
 	<li>s1*s2*a<sup>30</sup> mod 2<sup>64</sup> = n mod 2<sup>64</sup></li>
 	<li>If we multiply both sides by the <a href="https://en.wikipedia.org/wiki/Modular_multiplicative_inverse"><b>Inverse Modulo</b></a> of <b>a<sup>30</sup> modulo 2<sup>64</sup></b> we get:</li>
 	<li>s1*s2 mod 2<sup>64</sup> = n*inverse_modulo(a<sup>30</sup>,2<sup>64</sup>) mod 2<sup>64</sup></li>
+	<li>(We know this inverse modulo must exist because gcd(a<sup>30</sup>,2<sup>64</sup>) = 1)
 	<li>Meaning we can get the lower 64 bits of <b>s1*s2</b> by calculating <b>n*inverse_modulo(a<sup>30</sup>,2<sup>64</sup>) mod 2<sup>64</sup></b></li>
 </ul>
 <p>Now that we have both the upper 64 bits and the lower 64 bits of <b>s1*s2</b> we can concatenate them to get <b>s1*s2</b> and since this is a number with a bit length of 128 bits we can easily factor it(I used sagemath for this).</p>
