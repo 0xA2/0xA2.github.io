@@ -32,7 +32,7 @@ tr:nth-child(1) {
 
 </style>
 
-
+<title>Reverse Engineering Pokemon NDS save files - LostMyPlaintext</title>
 <p>Partially inspired by [<a href="https://www.youtube.com/watch?v=VVbRe7wr3G4">LiveOverflow's video series</a>] on Pokemon Red I decided to revisit a few classics from my own childhood: the 4th generation Pokemon main game titles. Mainly I really wanted to replay these games using whatever Pokemon I wanted and not just the ones availiable at certain parts of each game so from the beginning my main goal was to find a way to edit a Pokemon's species. I'll be mostly focusing on [<a href="https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Platinum_Version">Pokemon Platinum version</a>] but most of this information applies to all main games from the same generation (only offsets differ).</p> 
 <hr style="border-top:1px solid #28323C;">
 <p></p>
