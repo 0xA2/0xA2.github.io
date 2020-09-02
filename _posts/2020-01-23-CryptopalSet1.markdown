@@ -4,7 +4,7 @@ title: "Cryptopals Challenges Set 1 - Solutions"
 description: "[write-up] Written in Python 3 (code only)"
 categories: "Cryptopals"
 ---
-
+<title>Cryptopals Challenges Set 1 - Solutions - LostMyPlaintext</title> 
 Challenge 1:
 
 <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">binascii</span>
