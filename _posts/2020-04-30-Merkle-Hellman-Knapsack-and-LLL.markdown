@@ -4,7 +4,7 @@ title: "Merkle-Hellman knapsack and the LLL algorithm"
 description: "[project] An ilustrative implementation of the original Merkle-Hellman knapsack cryptosystem and the algorithm that can break it in polynomial time"
 categories: "Project"
 ---
-
+<title>Merkle-Hellman knapsack and the LLL algorithm - LostMyPlaintext</title>
 <p>An ilustrative implementation of the original Merkle-Hellman knapsack cryptosystem and the algorithm that can break it in polynomial time.</p>
 <hr style="border-top:1px solid #28323C;">
 <p></p>
