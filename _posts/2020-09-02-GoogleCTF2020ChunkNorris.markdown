@@ -19,7 +19,7 @@ ul {
 }
 </style>
 
-
+<title>Google CTF 2020 - Chunk Norris - LostMyPlaintext</title>
 <p><h4>Writeup for the easy crypto challenge from Google CTF 2020</h4></p>
 <hr style="border-top:1px solid #28323C;">
 <img class="center" src="/assets/images/chunkNorris.png">
