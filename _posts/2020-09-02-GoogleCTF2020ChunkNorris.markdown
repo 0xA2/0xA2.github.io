@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Google CTF 2020 - Chunk Norris"
-description: "[write-up] The easy crypto challenge from google CTF 2020"
+description: "[write-up] The easy crypto challenge from Google CTF 2020"
 categories: "Writeups"
 ---
 
