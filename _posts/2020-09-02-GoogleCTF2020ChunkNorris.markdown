@@ -72,7 +72,7 @@ ul {
 <ul>
 	<li><b>n</b> = s1*s2*2<sup>64*30</sup> + s1*s2*a<sup>2</sup> mod 2<sup>64</sup> *2<sup>64*29</sup> + ... + s1*s2*a<sup>30</sup> mod 2<sup>64</sup></li>
 </ul>
-<p>Because of the line "s |= 0xc000000000000001" (which sets the first two bits as well as the last bit of <b>s</b> to <b>1</b>) we can be sure that s1*s2 has a bit length of 128 bits. Knowing this, looking at how we've written <b>n</b> we can conclude that the upper 64 bits of <b>s1*s2</b> are the same as the 64 upper bits of <b>n</b> minus a potential <a href="https://en.wikipedia.org/wiki/Carry_(arithmetic)"><b>carry</b></a>. Now that we have a way to get the 64 upper bits of <b>s1*s2</b> let's figure out how to get the 64 lower bits.</p>
+<p>Because of the line "s |= 0xc000000000000001" (which sets the first two bits as well as the last bit of <b>s</b> to <b>1</b>) we can be sure that <b>s1*s2</b> has a bit length of 128 bits. Knowing this, looking at how we've written <b>n</b> we can conclude that the upper 64 bits of <b>s1*s2</b> are the same as the 64 upper bits of <b>n</b> minus a potential <a href="https://en.wikipedia.org/wiki/Carry_(arithmetic)"><b>carry</b></a>. Now that we have a way to get the 64 upper bits of <b>s1*s2</b> let's figure out how to get the 64 lower bits.</p>
 <p>Again, looking at how we've written <b>n</b> we can see that the lower 64 bits of <b>n</b> (or n mod 2<sup>64</sup>) are equal to <b>s1*s2*a<sup>30</sup> mod 2<sup>64</sup></b> so we can conclude the following:</p>
 <ul>
 	<li>We know that:</li>
