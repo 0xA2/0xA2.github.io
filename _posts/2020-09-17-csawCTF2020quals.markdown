@@ -1,0 +1,824 @@
+---
+layout: post
+title: "CSAW CTF 2020 Quals - Crypto Challenges"
+description: "[write-up] Some crypto challenges from CSAW CTF 2020"
+categories: "Writeups"
+---
+
+<style type="text/css">
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul {
+  list-style: none;
+}
+</style>
+
+<title>CSAW CTF 2020 Quals - Crypto Challenges - LostMyPlaintext</title>
+<img class="center" src="/assets/images/csaw.png">
+<p>Writeups for the crypto challenges I could solve from this years CSAW CTF.</p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>Perfect Secrecy:</h3></p>
+<img class="center" src="/assets/images/perfectSecrecy.png">
+<p>For this challenge we're given two images:</p>
+<p>Image1:</p>
+<p></p>
+<img class="center" src="/assets/images/image1.png">
+<p></p>
+<p>Image2:</p>
+<img class="center" src="/assets/images/image2.png">
+<p></p>
+<p>The challenge description implies both images were encrypted with a one-time pad (hence "perfect secrecy") however it also says that the same key was used on both images. In other words:</p>
+<ul>
+	<li>image1 = originalImage1 XOR key</li>
+	<li>image2 = originalImage2 XOR key</li>
+</ul>
+<p>Meaning that if we XOR the two images we get:</p>
+<ul>
+	<li>image1 XOR image2 = originalImage1 XOR key XOR originalImage2 XOR key</li>
+	<li>or</li>
+	<li>image1 XOR image2 = originalImage1 XOR originalImage2</li>
+</ul>
+<p>We can use the PIL python module to do this but personally I just threw the images into this website:  <a href="https://online-image-comparison.com"><b>https://online-image-comparison.com</b></a></p>
+<p>And got the following result:</p>
+<p></p>
+<img class="center" src="/assets/images/perfectSecrecyFlag.png">
+<p></p>
+<p>The flag is the base64 encoded string on the image, all we gotta do is decode it.</p>
+<p><b>FLAG: flag{0n3_t1m3_P@d!}</b></p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>difib:</h3></p>
+<img class="center" src="/assets/images/difib.png">
+<p></p>
+<p>For this challenge we get the following files:</p>
+<p>message:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">snbwmuotwodwvcywfgmruotoozaiwghlabvuzmfobhtywftopmtawyhifqgtsiowetrksrzgrztkfctxnrswnhxshylyehtatssukfvsnztyzlopsv</span>
+</pre></div>
+<p></p>
+<p>ramblings:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #e6db74">Mr. Jock, TV quiz PhD., bags few lynx</span>
+<span style="color: #e6db74">Two driven jocks help fax my big quiz.</span>
+<span style="color: #e6db74">Jock nymphs waqf drug vex blitz</span>
+<span style="color: #e6db74">Fickle jinx bog dwarves spy math quiz.</span>
+<span style="color: #e6db74">Crwth vox zaps qi gym fjeld bunk</span>
+<span style="color: #e6db74">Public junk dwarves hug my quartz fox.</span>
+<span style="color: #e6db74">Quick fox jumps nightly above wizard.</span>
+<span style="color: #e6db74">Hm, fjord waltz, cinq busk, pyx veg</span>
+<span style="color: #e6db74">phav fyx bugs tonq milk JZD CREW</span>
+<span style="color: #e6db74">Woven silk pyjamas exchanged for blue quartz.</span>
+<span style="color: #e6db74">The quick onyx goblin jumps over the lazy dwarf.</span>
+<span style="color: #e6db74">Foxy diva Jennifer Lopez wasn’t baking my quiche.</span>
+<span style="color: #e6db74">he said &#39;bcfgjklmnopqrtuvwxyz&#39;</span>
+<span style="color: #e6db74">Jen Q. Vahl: bidgum@krw.cfpost.xyz</span>
+<span style="color: #e6db74">Brawny gods just flocked up to quiz and vex him.</span>
+<span style="color: #e6db74">Emily Q Jung-Schwarzkopf XTV, B.D.</span>
+<span style="color: #e6db74">My girl wove six dozen plaid jackets before she quit.</span>
+<span style="color: #e6db74">John &#39;Fez&#39; Camrws Putyx. IG: @kqBlvd</span>
+<span style="color: #e6db74">Q-Tip for SUV + NZ Xylem + DC Bag + HW?....JK!</span>
+<span style="color: #e6db74">Jumbling vext frowzy hacks pdq</span>
+<span style="color: #e6db74">Jim quickly realized that the beautiful gowns are expensive.</span>
+<span style="color: #e6db74">J.Q. Vandz struck my big fox whelp</span>
+<span style="color: #e6db74">How razorback-jumping frogs can level six piqued gymnasts!</span>
+<span style="color: #e6db74">Lumpy Dr. AbcGQVZ jinks fox thew</span>
+<span style="color: #e6db74">Fake bugs put in wax jonquils drive him crazy.</span>
+<span style="color: #e6db74">The jay, pig, fox, zebra, and my wolves quack!</span>
+<span style="color: #e6db74">hey i am nopqrstuvwxzbcdfgjkl</span>
+<span style="color: #e6db74">Quiz JV BMW lynx stock derp. Agh! F.</span>
+<span style="color: #e6db74">Pled big czar junks my VW Fox THQ</span>
+<span style="color: #e6db74">The big plump jowls of zany Dick Nixon quiver.</span>
+<span style="color: #e6db74">Waltz GB quick fjords vex nymph</span>
+<span style="color: #e6db74">qwertyuioplkjhgfdsazxcvbnm</span>
+<span style="color: #e6db74">Cozy lummox gives smart squid who asks for job pen.</span>
+<span style="color: #e6db74">zyxwvutsrqponmlkjihgfedcba</span>
+<span style="color: #e6db74">Few black taxis drive up major roads on quiet hazy nights.</span>
+<span style="color: #e6db74">a quick brown fx jmps ve th lzy dg</span>
+<span style="color: #e6db74">Bored? Craving a pub quiz fix? Why, just come to the Royal Oak!</span>
+</pre></div>
+<p></p>
+<p>From the title and description we conclude this must be related to the classic cipher <a href="https://en.wikipedia.org/wiki/Bifid_cipher"><b>bifid</b></a>. Understanding how this cipher works shouldn't be particularly hard, however notice that the number of solves was quite low especially considering it's a 50 point challenge. This was because there is a bit of guessing involved from this point onward. Among the ramblings file we see that there are a few lines that are 26 characters long (if we remove spaces and punctuation) and have exactly one of each letter in them. The Bifid cipher uses keys that are 25 characters long and contains exactly one of each letter (normally with 'j' being omitted). So I first thought that one these lines must be the correct key (after removing spaces and such of course) but this is not the case. This is where I'd guess most people got stuck. With a hint that was posted later it became clear that all apparent keys (the lines with the 26 different letters) where used (not just one) in the order they appear in the ramblings. This means that to get the original message we need to decrypt the message we where given using the last key in the ramblings file, then decrypt the result using the second to last key and so on. Here's the first script I wrote to do so:</p>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">pycipher</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">Bifid</span>
+
+<span style="color: #f8f8f2">message</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;snbwmuotwodwvcywfgmruotoozaiwghlabvuzmfobhtywftopmtawyhifqgtsiowetrksrzgrztkfctxnrswnhxshylyehtatssukfvsnztyzlopsv&quot;</span>
+
+<span style="color: #f8f8f2">ramblings</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[</span><span style="color: #e6db74">&#39;MrJockTVquizPhDbagsfewlynx&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Twodrivenjockshelpfaxmybigquiz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Jocknymphswaqfdrugvexblitz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Ficklejinxbogdwarvesspymathquiz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Crwthvoxzapsqigymfjeldbunk&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Publicjunkdwarveshugmyquartzfox&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Quickfoxjumpsnightlyabovewizard&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Hmfjordwaltzcinqbuskpyxveg&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;phavfyxbugstonqmilkJZDCREW&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Wovensilkpyjamasexchangedforbluequartz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Thequickonyxgoblinjumpsoverthelazydwarf&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;FoxydivaJenniferLopezwasntbakingmyquiche&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;hesaidbcfgjklmnopqrtuvwxyz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;JenQVahlbidgumkrwcfpostxyz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Brawnygodsjustflockeduptoquizandvexhim&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;EmilyQJungSchwarzkopfXTVBD&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Mygirlwovesixdozenplaidjacketsbeforeshequit&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;JohnFezCamrwsPutyxIGkqBlvd&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;QTipforSUVNZXylemDCBagHWJK&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Jumblingvextfrowzyhackspdq&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Jimquicklyrealizedthatthebeautifulgownsareexpensive&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;JQVandzstruckmybigfoxwhelp&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Howrazorbackjumpingfrogscanlevelsixpiquedgymnasts&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;LumpyDrAbcGQVZjinksfoxthew&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Fakebugsputinwaxjonquilsdrivehimcrazy&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Thejaypigfoxzebraandmywolvesquack&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;heyiamnopqrstuvwxzbcdfgjkl&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;QuizJVBMWlynxstockderpAghF&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;PledbigczarjunksmyVWFoxTHQ&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;ThebigplumpjowlsofzanyDickNixonquiver&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;WaltzGBquickfjordsvexnymph&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;qwertyuioplkjhgfdsazxcvbnm&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Cozylummoxgivessmartsquidwhoasksforjobpen&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;zyxwvutsrqponmlkjihgfedcba&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Fewblacktaxisdriveupmajorroadsonquiethazynights&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;aquickbrownfxjmpsvethlzydg&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;BoredCravingapubquizfixWhyjustcometotheRoyalOak&#39;</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #f8f8f2">keys</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">r</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">ramblings[::</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]:</span>
+	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(r)</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">26</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #f8f8f2">keys</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">lower()</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">replace(</span><span style="color: #e6db74">&quot;j&quot;</span><span style="color: #f8f8f2">,</span><span style="color: #e6db74">&quot;&quot;</span><span style="color: #f8f8f2">))</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">():</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">message</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">key</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">keys:</span>
+		<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Bifid(key,</span><span style="color: #ae81ff">5</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decipher(ct)</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(ct)</span>
+
+<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">__name__</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;__main__&quot;</span><span style="color: #f8f8f2">:</span>
+	<span style="color: #f8f8f2">main()</span>
+</pre></div>
+<p></p>
+<p>Output:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">XUSTXSOMEXUNNECESSARYXTEXTXTHATXHOLDSXABSOLUTELYXNOXMEANINGXWHATSOEVERXANDXBEARSXNOXSIGNIFICANCEXTOXYOUXINXANYXWAY</span>
+</pre></div>
+<p>I first replaces the first 'X' with a 'J' as that seems like what would be intended and sent the result to the server:</p>
+<img class="center" src="/assets/images/bifidNope.png">
+<p></p>
+<p>I then tried to replace the "X"s with spaces and send everything in lower case, and this got me the flag:</p>
+<img class="center" src="/assets/images/bifidSuccess.png">
+<p>Final solver:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">pycipher</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">Bifid</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">pwn</span> <span style="color: #f92672">import</span> <span style="color: #f92672">*</span>
+
+<span style="color: #f8f8f2">message</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;snbwmuotwodwvcywfgmruotoozaiwghlabvuzmfobhtywftopmtawyhifqgtsiowetrksrzgrztkfctxnrswnhxshylyehtatssukfvsnztyzlopsv&quot;</span>
+
+<span style="color: #f8f8f2">ramblings</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[</span><span style="color: #e6db74">&#39;MrJockTVquizPhDbagsfewlynx&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Twodrivenjockshelpfaxmybigquiz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Jocknymphswaqfdrugvexblitz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Ficklejinxbogdwarvesspymathquiz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Crwthvoxzapsqigymfjeldbunk&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Publicjunkdwarveshugmyquartzfox&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Quickfoxjumpsnightlyabovewizard&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Hmfjordwaltzcinqbuskpyxveg&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;phavfyxbugstonqmilkJZDCREW&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Wovensilkpyjamasexchangedforbluequartz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Thequickonyxgoblinjumpsoverthelazydwarf&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;FoxydivaJenniferLopezwasntbakingmyquiche&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;hesaidbcfgjklmnopqrtuvwxyz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;JenQVahlbidgumkrwcfpostxyz&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Brawnygodsjustflockeduptoquizandvexhim&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;EmilyQJungSchwarzkopfXTVBD&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Mygirlwovesixdozenplaidjacketsbeforeshequit&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;JohnFezCamrwsPutyxIGkqBlvd&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;QTipforSUVNZXylemDCBagHWJK&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Jumblingvextfrowzyhackspdq&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Jimquicklyrealizedthatthebeautifulgownsareexpensive&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;JQVandzstruckmybigfoxwhelp&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Howrazorbackjumpingfrogscanlevelsixpiquedgymnasts&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;LumpyDrAbcGQVZjinksfoxthew&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Fakebugsputinwaxjonquilsdrivehimcrazy&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Thejaypigfoxzebraandmywolvesquack&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;heyiamnopqrstuvwxzbcdfgjkl&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;QuizJVBMWlynxstockderpAghF&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;PledbigczarjunksmyVWFoxTHQ&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;ThebigplumpjowlsofzanyDickNixonquiver&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;WaltzGBquickfjordsvexnymph&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;qwertyuioplkjhgfdsazxcvbnm&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Cozylummoxgivessmartsquidwhoasksforjobpen&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;zyxwvutsrqponmlkjihgfedcba&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;Fewblacktaxisdriveupmajorroadsonquiethazynights&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;aquickbrownfxjmpsvethlzydg&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;BoredCravingapubquizfixWhyjustcometotheRoyalOak&#39;</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #f8f8f2">keys</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">r</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">ramblings[::</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]:</span>
+	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(r)</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">26</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #f8f8f2">keys</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">lower()</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">replace(</span><span style="color: #e6db74">&quot;j&quot;</span><span style="color: #f8f8f2">,</span><span style="color: #e6db74">&quot;&quot;</span><span style="color: #f8f8f2">))</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">():</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">message</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">key</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">keys:</span>
+		<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Bifid(key,</span><span style="color: #ae81ff">5</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decipher(ct)</span>
+	<span style="color: #75715e">#print (ct)</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">ct</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">lower()</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">replace(</span><span style="color: #e6db74">&quot;x&quot;</span><span style="color: #f8f8f2">,</span><span style="color: #e6db74">&quot; &quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;j&quot;</span><span style="color: #f92672">+</span><span style="color: #f8f8f2">ct[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:</span><span style="color: #ae81ff">24</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">+</span><span style="color: #e6db74">&#39;x&#39;</span><span style="color: #f92672">+</span><span style="color: #f8f8f2">ct[</span><span style="color: #ae81ff">25</span><span style="color: #f8f8f2">:]</span>
+
+	<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">remote(</span><span style="color: #e6db74">&quot;crypto.chal.csaw.io&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5004</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(ct)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">interactive()</span>
+
+<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">__name__</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;__main__&quot;</span><span style="color: #f8f8f2">:</span>
+	<span style="color: #f8f8f2">main()</span>
+</pre></div>
+<p></p>
+<p><b>FLAG: flag{t0ld_y4_1t_w4s_3z}</b></p>
+<p></p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>modus_operandi:</h3></p>
+<img class="center" src="/assets/images/modus_operandi.png">
+<p>For this challenge we only get a server connection that asks for input, encrypts it with either AES ECB Mode or AES CBC Mode, gives back the corresponding ciphertext and asks us to guess which mode was used. If we get correctly it repeats this process, if not we lose the connection. First let's take a look at how AES ECB encryption works and at how AES CBC encryption works:</p>
+<p></p>
+<p>AES ECB Mode - Encryption:</p>
+<img class="center" src="/assets/images/ecbEncrypt.png">
+<p>AES CBC Mode - Encryption:</p>
+<img class="center" src="/assets/images/cbcEncrypt.png">
+<p></p>
+<p>Notice how in ECB our plaintext is simply divided in a number of blocks of the same length and encrypted block by block. Given a plaintext block, the AES algorithm by itself, will always produce the same ciphertext as long as the same key is used and in AES ECB mode the same key is used for each block. Consider the following example:</p>
+<ul>
+	<li>Let's say we want to encrypt this plaintext: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' </li>
+	<li>(that's 32 'A's)</li>
+	<li>And we use AES ECB mode with a block size of 16 bytes</li>
+	<li>We'd first encrypt a block of 16 'A's and then a second block of 16 'A's</li>
+	<li>Since we're using the same key for both blocks and we're encrypting the exact same plaintext in each block (16 'A's) we'll end up with two encrypted blocks that look exactly the same.</li>
+	<li>So our 32 byte ciphretext will be the concatenation of two indentical 16 byte sequences</li>
+</ul>
+<p>This means if we find repeating patterns (with lenght equal to the block size used) in our ciphertext it is very likely that the AES mode used was ECB. Note that because an initialization vector and XOR operations are used in CBC, this mode is very very unlikely to produce such patterns.</p>
+<p>Something important to note about this challenge is that the first answer the server is expecting is always 'ECB' (it would close the connection if we answered 'CBC'). Knowing the first mode used by the server will always be ECB we can send large strings of 'A's and look for repeating patterns in order to figure out the block size. I first tried sending 32 'A's and didn't get any pattern in the response (considering the standard size for and AES block is 16 bytes this was a little strange). But it turns out that when sending 64 'A's we in fact got a repating pattern of 32 bytes meaning the server is using 32 byte blocks. Knowing all of this we can write a script that repeatedly sends a plaintext of 64 'A's, looks for repeating blocks in the corresponding ciphertexts and answers back with  'ECB' if it finds repeating blocks and 'CBC' if it doesn't:</p>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">binascii</span>
+
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">pwn</span> <span style="color: #f92672">import</span> <span style="color: #f92672">*</span>
+
+<span style="color: #f8f8f2">BLOCK_SIZE</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">32</span>
+
+<span style="color: #f8f8f2">pt</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;A&quot;</span><span style="color: #f92672">*</span><span style="color: #ae81ff">64</span>
+
+<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">remote(</span><span style="color: #e6db74">&quot;crypto.chal.csaw.io&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5001</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">AES_ECB_Score</span><span style="color: #f8f8f2">(ct):</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">binascii</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">unhexlify(ct)</span>
+	<span style="color: #f8f8f2">blocks</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[ct[i:i</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">BLOCK_SIZE]</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">len(ct),</span> <span style="color: #f8f8f2">BLOCK_SIZE)]</span>
+	<span style="color: #f8f8f2">score</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">len(blocks)</span> <span style="color: #f92672">-</span> <span style="color: #f8f8f2">len(set(blocks))</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">score</span>
+
+
+<span style="color: #66d9ef">while</span> <span style="color: #f8f8f2">True:</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Enter plaintext:&quot;</span><span style="color: #f8f8f2">)</span>
+
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(pt)</span>
+
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Ciphertext is: &quot;</span><span style="color: #f8f8f2">)</span>
+
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvline()[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(ct)</span>
+
+	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">AES_ECB_Score(ct)</span> <span style="color: #f92672">&gt;</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;sending &#39;ECB&#39;&quot;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&#39;ECB&#39;</span><span style="color: #f8f8f2">)</span>
+
+	<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;sending &#39;CBC&#39;&quot;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&#39;CBC&#39;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(str(i</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot; correct answers&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">interactive()</span>
+</pre></div>
+<p></p>
+<p>Now this script would always crash after sending arround 176 plaintexts and the server didn't seem to be printing the flag after a given number of correct answers.</p>
+<p>A fellow team member thought that since the server always used ECB on the first plaintext, CBC on the second and so on that maybe the modes used where a binary encoding of the flag, as in every 'ECB' answer represents a 0 and every 'CBC' answer represents a 1 (or the other way arround). Turns out this is exactly what was happening.</p>
+<p>New solver:</p>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">binascii</span>
+
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">pwn</span> <span style="color: #f92672">import</span> <span style="color: #f92672">*</span>
+
+<span style="color: #f8f8f2">BLOCK_SIZE</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">32</span>
+
+<span style="color: #f8f8f2">pt</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;A&quot;</span><span style="color: #f92672">*</span><span style="color: #ae81ff">64</span>
+
+<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">remote(</span><span style="color: #e6db74">&quot;crypto.chal.csaw.io&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5001</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">AES_ECB_Score</span><span style="color: #f8f8f2">(ct):</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">binascii</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">unhexlify(ct)</span>
+	<span style="color: #f8f8f2">blocks</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[ct[i:i</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">BLOCK_SIZE]</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">len(ct),</span> <span style="color: #f8f8f2">BLOCK_SIZE)]</span>
+	<span style="color: #f8f8f2">score</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">len(blocks)</span> <span style="color: #f92672">-</span> <span style="color: #f8f8f2">len(set(blocks))</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">score</span>
+
+<span style="color: #f8f8f2">bits0</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;&quot;</span>
+<span style="color: #f8f8f2">bits1</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;&quot;</span>
+
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span><span style="color: #ae81ff">176</span><span style="color: #f8f8f2">):</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Enter plaintext:&quot;</span><span style="color: #f8f8f2">)</span>
+
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(pt)</span>
+
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Ciphertext is: &quot;</span><span style="color: #f8f8f2">)</span>
+
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvline()[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(ct)</span>
+
+	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">AES_ECB_Score(ct)</span> <span style="color: #f92672">&gt;</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;sending &#39;ECB&#39;&quot;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&#39;ECB&#39;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #f8f8f2">bits0</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot;0&quot;</span>
+		<span style="color: #f8f8f2">bits1</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot;1&quot;</span>
+	<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;sending &#39;CBC&#39;&quot;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&#39;CBC&#39;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #f8f8f2">bits0</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot;1&quot;</span>
+		<span style="color: #f8f8f2">bits1</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot;0&quot;</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(str(i</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot; correct answers&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(binascii</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">unhexlify(hex(int(bits0,</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">))[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()))</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(binascii</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">unhexlify(hex(int(bits1,</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">))[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()))</span>
+</pre></div>
+<p></p>
+<img class="center" src="/assets/images/modus_operandiFlag.png">
+<p><b>FLAG: flag{ECB_re@lly_sUck$}</b></p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>authy:</h3></p>
+<img class="center" src="/assets/images/authy.png">
+<p>For this challenge we the following server code:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #75715e">#!/usr/bin/env python3</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">struct</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">hashlib</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">base64</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">flask</span>
+
+<span style="color: #75715e"># flag that is to be returned once authenticated</span>
+<span style="color: #f8f8f2">FLAG</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;:p&quot;</span>
+
+<span style="color: #75715e"># secret used to generate HMAC with</span>
+<span style="color: #f8f8f2">SECRET</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;:p&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span>
+
+<span style="color: #f8f8f2">app</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">flask</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Flask(__name__)</span>
+
+<span style="color: #a6e22e">@app.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;/&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">methods</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">[</span><span style="color: #e6db74">&quot;GET&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;POST&quot;</span><span style="color: #f8f8f2">])</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">home</span><span style="color: #f8f8f2">():</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&quot;&quot;</span>
+<span style="color: #e6db74">This is a secure and private note-taking app sponsored by your favorite Nation-State.</span>
+<span style="color: #e6db74">For citizens&#39; convenience, we offer to encrypt your notes with OUR own password! How awesome is that?</span>
+<span style="color: #e6db74">Just give us the ID that we generate for you, and we&#39;ll happily decrypt it back for you!</span>
+
+<span style="color: #e6db74">Unfortunately we have prohibited the use of frontend design in our intranet, so the only way you can interact with it is our API.</span>
+
+<span style="color: #e6db74">/new</span>
+
+<span style="color: #e6db74">    DESCRIPTION:</span>
+<span style="color: #e6db74">        Adds a new note and uses our Super Secure Cryptography to encrypt it.</span>
+
+<span style="color: #e6db74">    POST PARAMS:</span>
+<span style="color: #e6db74">        :author: your full government-issued legal name</span>
+<span style="color: #e6db74">        :note: the message body you want to include. We won&#39;t read it :)</span>
+
+<span style="color: #e6db74">    RETURN PARAMS:</span>
+<span style="color: #e6db74">        :id: an ID protected by password  that you can use to retrieve and decrypt the note.</span>
+<span style="color: #e6db74">        :integrity: make sure you give this to validate your ID, Fraud is a high-level offense!</span>
+
+
+<span style="color: #e6db74">/view</span>
+<span style="color: #e6db74">    DESCRIPTION:</span>
+<span style="color: #e6db74">        View and decrypt the contents of a note stored on our government-sponsored servers.</span>
+
+<span style="color: #e6db74">    POST PARAMS:</span>
+<span style="color: #e6db74">        :id: an ID that you can use to retrieve and decrypt the note.</span>
+<span style="color: #e6db74">        :integrity: make sure you give this to validate your ID, Fraud is a high-level offense!</span>
+
+<span style="color: #e6db74">    RETURN PARAMS:</span>
+<span style="color: #e6db74">        :message: the original unadultered message you stored on our service.</span>
+<span style="color: #e6db74">&quot;&quot;&quot;</span>
+
+<span style="color: #a6e22e">@app.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;/new&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">methods</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">[</span><span style="color: #e6db74">&quot;POST&quot;</span><span style="color: #f8f8f2">])</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">new</span><span style="color: #f8f8f2">():</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">flask</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">method</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;POST&quot;</span><span style="color: #f8f8f2">:</span>
+
+        <span style="color: #f8f8f2">payload</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">flask</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">to_dict()</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;author&quot;</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;note&quot;</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;admin&quot;</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;access_sensitive&quot;</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+        <span style="color: #f8f8f2">info</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span><span style="color: #e6db74">&quot;admin&quot;</span><span style="color: #f8f8f2">:</span> <span style="color: #e6db74">&quot;False&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;access_sensitive&quot;</span><span style="color: #f8f8f2">:</span> <span style="color: #e6db74">&quot;False&quot;</span> <span style="color: #f8f8f2">}</span>
+        <span style="color: #f8f8f2">info</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">update(payload)</span>
+        <span style="color: #f8f8f2">info[</span><span style="color: #e6db74">&quot;entrynum&quot;</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">783</span>
+
+        <span style="color: #f8f8f2">infostr</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;&quot;</span>
+        <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">pos,</span> <span style="color: #f8f8f2">(key,</span> <span style="color: #f8f8f2">val)</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">enumerate(info</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">items()):</span>
+            <span style="color: #f8f8f2">infostr</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot;{}={}&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">format(key,</span> <span style="color: #f8f8f2">val)</span>
+            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">pos</span> <span style="color: #f92672">!=</span> <span style="color: #f8f8f2">(len(info)</span> <span style="color: #f92672">-</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">):</span>
+                <span style="color: #f8f8f2">infostr</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot;&amp;&quot;</span>
+
+        <span style="color: #f8f8f2">infostr</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">infostr</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span>
+
+        <span style="color: #f8f8f2">identifier</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">base64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">b64encode(infostr)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()</span>
+
+        <span style="color: #f8f8f2">hasher</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">hashlib</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sha1()</span>
+        <span style="color: #f8f8f2">hasher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">update(SECRET</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">infostr)</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Successfully added {}:{}</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">format(identifier,</span> <span style="color: #f8f8f2">hasher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hexdigest())</span>
+
+
+<span style="color: #a6e22e">@app.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;/view&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">methods</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">[</span><span style="color: #e6db74">&quot;POST&quot;</span><span style="color: #f8f8f2">])</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">view</span><span style="color: #f8f8f2">():</span>
+
+    <span style="color: #f8f8f2">info</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">flask</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">to_dict()</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;id&quot;</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">info</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;integrity&quot;</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">info</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+    <span style="color: #f8f8f2">identifier</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">base64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">b64decode(info[</span><span style="color: #e6db74">&quot;id&quot;</span><span style="color: #f8f8f2">])</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()</span>
+    <span style="color: #f8f8f2">checksum</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">info[</span><span style="color: #e6db74">&quot;integrity&quot;</span><span style="color: #f8f8f2">]</span>
+
+    <span style="color: #f8f8f2">params</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">identifier</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">replace(</span><span style="color: #e6db74">&#39;&amp;&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39; &#39;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">split(</span><span style="color: #e6db74">&quot; &quot;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">note_dict</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span> <span style="color: #f8f8f2">param</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">split(</span><span style="color: #e6db74">&quot;=&quot;</span><span style="color: #f8f8f2">)[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">]:</span> <span style="color: #f8f8f2">param</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">split(</span><span style="color: #e6db74">&quot;=&quot;</span><span style="color: #f8f8f2">)[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>  <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">param</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">params</span> <span style="color: #f8f8f2">}</span>
+
+    <span style="color: #f8f8f2">encode</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">base64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">b64decode(info[</span><span style="color: #e6db74">&quot;id&quot;</span><span style="color: #f8f8f2">])</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode(</span><span style="color: #e6db74">&#39;unicode-escape&#39;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode(</span><span style="color: #e6db74">&#39;ISO-8859-1&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">hasher</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">hashlib</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sha1()</span>
+    <span style="color: #f8f8f2">hasher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">update(SECRET</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">encode)</span>
+    <span style="color: #f8f8f2">gen_checksum</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">hasher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hexdigest()</span>
+
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">checksum</span> <span style="color: #f92672">!=</span> <span style="color: #f8f8f2">gen_checksum:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+    <span style="color: #66d9ef">try</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #f8f8f2">entrynum</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">int(note_dict[</span><span style="color: #e6db74">&quot;entrynum&quot;</span><span style="color: #f8f8f2">])</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #ae81ff">0</span> <span style="color: #f92672">&lt;=</span> <span style="color: #f8f8f2">entrynum</span> <span style="color: #f92672">&lt;=</span> <span style="color: #ae81ff">10</span><span style="color: #f8f8f2">:</span>
+
+            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(note_dict[</span><span style="color: #e6db74">&quot;admin&quot;</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">[True,</span> <span style="color: #e6db74">&quot;True&quot;</span><span style="color: #f8f8f2">]):</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(note_dict[</span><span style="color: #e6db74">&quot;access_sensitive&quot;</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">[True,</span> <span style="color: #e6db74">&quot;True&quot;</span><span style="color: #f8f8f2">]):</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(entrynum</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">7</span><span style="color: #f8f8f2">):</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">Author: admin</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">Note: You disobeyed our rules, but here&#39;s the note: &quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">FLAG</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;</span><span style="color: #ae81ff">\n\n</span><span style="color: #e6db74">&quot;</span>
+            <span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Hmmmmm....&quot;</span>
+
+        <span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&quot;&quot;</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">Author: {}</span>
+<span style="color: #e6db74">Note: {}</span><span style="color: #ae81ff">\n\n</span><span style="color: #e6db74">&quot;&quot;&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">format(note_dict[</span><span style="color: #e6db74">&quot;author&quot;</span><span style="color: #f8f8f2">],</span> <span style="color: #f8f8f2">note_dict[</span><span style="color: #e6db74">&quot;note&quot;</span><span style="color: #f8f8f2">])</span>
+
+    <span style="color: #66d9ef">except</span> <span style="color: #a6e22e">Exception</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">__name__</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;__main__&quot;</span><span style="color: #f8f8f2">:</span>
+    <span style="color: #f8f8f2">app</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">run()</span>
+</pre></div>
+<p></p>
+<p>Basically we have a <b>/new</b> endpoint that let's us send an 'author' name and a 'note' to the server and gives us back and ID  for said note, essentially a base64 encoding of something that looks like this... </p>
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">admin</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">False</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">access_sensitive</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">False</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">author</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">Lost</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">note</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">MyPlaintext</span><span style="color: #f92672">&amp;</span><span style="color: #f8f8f2">entrynum</span><span style="color: #f92672">=</span><span style="color: #ae81ff">783</span>
+</pre></div>
+<p></p>
+<p>...and an integrity value. We can then send both of these back to the server through the <b>/view</b> endpoint and read our note. From the following part of the server code... </p>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(note_dict[</span><span style="color: #e6db74">&quot;admin&quot;</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">[True,</span> <span style="color: #e6db74">&quot;True&quot;</span><span style="color: #f8f8f2">]):</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(note_dict[</span><span style="color: #e6db74">&quot;access_sensitive&quot;</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">[True,</span> <span style="color: #e6db74">&quot;True&quot;</span><span style="color: #f8f8f2">]):</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">(entrynum</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">7</span><span style="color: #f8f8f2">):</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">Author: admin</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">Note: You disobeyed our rules, but here&#39;s the note: &quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">FLAG</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;</span><span style="color: #ae81ff">\n\n</span><span style="color: #e6db74">&quot;</span>
+            <span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+                <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Hmmmmm....&quot;</span>
+</pre></div>
+<p></p>
+<p>...we can tell that we can get the flag if we produce a valid note that contains the following:</p>
+<ul>
+	<li>&admin=True&access_sensitive=True&entrynum=7</li>
+</ul>
+<p>Obviously, the code won't allow us to just create a note with this string.</p>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">        <span style="color: #f8f8f2">payload</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">flask</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">to_dict()</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;author&quot;</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;note&quot;</span> <span style="color: #f92672">not</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;admin&quot;</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;access_sensitive&quot;</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">payload</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">keys():</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&gt;:(</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span>
+</pre></div>
+<p></p>
+<p>The vulnerability lies on the use of <a href="https://en.wikipedia.org/wiki/SHA-1"><b>SHA1</b></a> to create the integrity value:</p>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%">        <span style="color: #f8f8f2">hasher</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">hashlib</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sha1()</span>
+        <span style="color: #f8f8f2">hasher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">update(SECRET</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">infostr)</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Successfully added {}:{}</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">format(identifier,</span> <span style="color: #f8f8f2">hasher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hexdigest())</span>
+</pre></div>
+<p></p>
+<p>SHA1 is a hash function know to be vulnerable to <a href="https://en.wikipedia.org/wiki/Length_extension_attack"><b>Length Extension Attack</b></a>, essentially meaning we can calculate SHA1(someMessage + anyStringWeWant). Now there are a few implementation nuances to take into consideration if you wish to write code from scratch to do this so here we're gonna go full script kiddy here and use <a href="https://github.com/bwall/HashPump"><b>haspumpy</b></a>. The idea here is, we send some random note to the server, take the corresponding ID, decode it, add whatever data we want (in this case '&admin=True&access_sensitive=True&entrynum=7<'), encode it, and send it to the server along side the corresponding integrity hash value. To do this we also need to know the lenght of SECRET but we can just brute force it.</p>
+<p>Solver:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">base64</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">hashpumpy</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">requests</span>
+
+<span style="color: #f8f8f2">url</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;http://crypto.chal.csaw.io:5003&quot;</span> 
+<span style="color: #f8f8f2">new</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">url</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;/new&quot;</span>
+<span style="color: #f8f8f2">view</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">url</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;/view&quot;</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">sendNotes</span><span style="color: #f8f8f2">(name,note):</span>
+	<span style="color: #f8f8f2">s</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">requests</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Session()</span>
+	<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">s</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">post(new,</span> <span style="color: #f8f8f2">data</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span><span style="color: #e6db74">&quot;author&quot;</span> <span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">name,</span> <span style="color: #e6db74">&quot;note&quot;</span> <span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">note})</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">text[len(</span><span style="color: #e6db74">&quot;Successfully added &quot;</span><span style="color: #f8f8f2">):]</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">recvNotes</span><span style="color: #f8f8f2">(id,integrity):</span>
+	<span style="color: #f8f8f2">s</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">requests</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Session()</span>
+	<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">s</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">post(view,</span> <span style="color: #f8f8f2">data</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span><span style="color: #e6db74">&quot;id&quot;</span> <span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">id,</span> <span style="color: #e6db74">&quot;integrity&quot;</span> <span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">integrity})</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">text</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">():</span>
+	<span style="color: #f8f8f2">id,integrity</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">sendNotes(</span><span style="color: #e6db74">&quot;Lost&quot;</span><span style="color: #f8f8f2">,</span><span style="color: #e6db74">&quot;MyPlaintext&quot;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">split(</span><span style="color: #e6db74">&quot;:&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">integrity</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">integrity[:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+	<span style="color: #f8f8f2">original</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">base64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">b64decode(id)</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span><span style="color: #ae81ff">256</span><span style="color: #f8f8f2">):</span>
+		<span style="color: #f8f8f2">integ,</span> <span style="color: #f8f8f2">id</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">hashpumpy</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hashpump(integrity,original,</span><span style="color: #e6db74">&quot;&amp;admin=True&amp;access_sensitive=True&amp;entrynum=7&quot;</span><span style="color: #f8f8f2">,i)</span>
+		<span style="color: #f8f8f2">id</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">base64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">b64encode(id</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode(</span><span style="color: #e6db74">&#39;ISO-8859-1&#39;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode(</span><span style="color: #e6db74">&#39;unicode-escape&#39;</span><span style="color: #f8f8f2">))</span>
+		<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">recvNotes(id,integ)</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Number of requests sent &gt; &quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">str(i</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">))</span>
+		<span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;flag&quot;</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">r:</span>
+			<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(r)</span>
+			<span style="color: #66d9ef">break</span>
+
+<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">__name__</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;__main__&quot;</span><span style="color: #f8f8f2">:</span>
+	<span style="color: #f8f8f2">main()</span>
+</pre></div>
+<p></p>
+<img class="center" src="/assets/images/authyFlag.png">
+<p></p>
+<p><b>FLAG: flag{h4ck_th3_h4sh}</b></p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>adversarial:</h3></p>
+<img class="center" src="/assets/images/adversarial.png">
+<p></p>
+<p>For this challenge we get a file containing the following:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #e6db74">&#39;&#39;&#39;</span>
+<span style="color: #e6db74">-------------------</span>
+<span style="color: #e6db74">   Problem Text:</span>
+<span style="color: #e6db74">-------------------</span>
+
+<span style="color: #e6db74">While digging through system logs, Morpheus discovered machines on the local</span>
+<span style="color: #e6db74">network transmitting the following base64-encoded ciphertexts to an IP address</span>
+<span style="color: #e6db74">known to be under enemy control:</span>
+
+<span style="color: #e6db74">2us8eN+xyfX3m+ouq+Rp51ruXKXYbKCbe5GjrddBHVm0vhKd2KMXMjFWQVclCmNnsGuEhFSOoFRo</span>
+<span style="color: #e6db74">0hIKHGZrrCS/BRITjW7DJ5L+c0C6Dhu6yBNSnWDpf7sYMknxcaZ+FSwg0nVVNxlNZsfqpd9NOg7F</span>
+<span style="color: #e6db74">OGsysrh8EIGXZiovI6mLWo9FobtcCDbRZXT7Op5rz7hFynKLtFLIx1GTt4CUrKw6J/tpjTZ9mv/w</span>
+<span style="color: #e6db74">bBjD5Iwd060oTwfZd4NVg+GdDqyz1PA=</span>
+
+<span style="color: #e6db74">w+YyIN+r1brrm/li+7YB5Ey6XbjYbKCbfIej69lAEReh+weex/E7NX1GVEcuWGwyt37Ijk7AjlRt</span>
+<span style="color: #e6db74">2RlTSDJ0pTHrUQMZiiuHNdy/NUG2BFH/zR5diiWwcqtMJk36P/V4Hi87lztFfwxRI571sYtGd0CE</span>
+<span style="color: #e6db74">Im5hsbwwGoadIXk+LuCLXoZUp7U=</span>
+
+<span style="color: #e6db74">2es4LJm027Kll/h4tPBH6hX/XaubJfjcYpTm5pMPLBGj+xWdhuR+PWIVDhZkGj52oWuL3wrS/hUp</span>
+<span style="color: #e6db74">nVBfPC555COnRAxckT2aZsi4dx3uB1b5j0wB0CGwPeMYBUD6cbN/ESdslyYYf0xfJIa0tZ5Na1fX</span>
+<span style="color: #e6db74">dWth6/B8JYeWZj8mJ+KLR5Qa769ID2+MIHzrKtowm6kJnn/OjF/Ok0WWtYbY5axpYKFug31slvDn</span>
+<span style="color: #e6db74">OV2Br4g=</span>
+
+<span style="color: #e6db74">wOYuf56/3/W9yLNxpeoB3Ei9TOqVcLydOpKj64YZQEr39VOlgvAqdHxKXVFjH2Nn/DzQ3AzO5yBs</span>
+<span style="color: #e6db74">wwlfBSNvtySsQEtEznaTd9L+QUCsFhf32ghAiCf1MPYOaRuuf/VHFTM43jhHLAtYIdul6MkWaFHL</span>
+<span style="color: #e6db74">bF4ktal8HIqANTgtI6WTGN8T/rUOOTLOMT3lf55xw69Mk2rY4ASanQOusZKMrLI2M+ZphiB9y6e8</span>
+<span style="color: #e6db74">Oludtr0Mxb0oQBuKfY1HlOHHSvXpi/A=</span>
+
+<span style="color: #e6db74">xKM8Yd+s0rClv/kh/K1V7U66FuqxNaycPpSyrtoPDBGj+z6Qk/E3LD8PZwJqGXAi5GiNilPAsBVg</span>
+<span style="color: #e6db74">xBQRD2Z6qzfrXAQJ1m75KYn+fUSpBxf33hVKyTHldb1MOEfxIvVyHiRsij1NKh9RZsrttd9eKQ+G</span>
+<span style="color: #e6db74">KXky5rU9As+SKi0vNODPDp5PuukODjjTNn7hdZhxzK1awH7OoVjek1GfuYCR4v86Mudtlyo+kvPo</span>
+<span style="color: #e6db74">cErb44QI2OcoaAyeYcAAgq6SGe213P5s3JnNJc1kSHnEoWR7bY4u1Tk0w4uqB4E7zR500Ig+M/mz</span>
+<span style="color: #e6db74">qTYUVCbAd8ghJVAxA2aKOZ302gtYn1elVRO7ljUCQfo5WdZtdsimmTN1LcLfB0ZAgLxUIeABA+xG</span>
+<span style="color: #e6db74">ChOBG/Q3az9GqUn6s13t8i24ySz+xCl2fDLqZjCanEVWNtIx1D1Fvm3Mt7+45yoANA7lHqnYsS/Y</span>
+<span style="color: #e6db74">wWqSJswOJmVBuLJprfZ33mPGLsf0FXNzaho9cBYioFIQEzUUyQ==</span>
+
+<span style="color: #e6db74">zPcpbZyzmrTx3u8j46oPqHi9XeqMfarOOpGiudtcC1n17F3I1bZpdCAfABAySzBn9TPb1hPS/0cp</span>
+<span style="color: #e6db74">nV07B2ZyqzHrVw4MlDeAMpP+YU22ERf32ghAiCf1Pu55JVz+Mr4zETRsmjRVMVYZE83g8ItGPkCE</span>
+<span style="color: #e6db74">KG4zo64vUdzEaGB4c7KLH9cO/asdW3eMfC6xNN86kegEkxaB+FnExwOIsZGU9f8nL7V8iSwu0/zh</span>
+<span style="color: #e6db74">ehnS8YxH</span>
+
+<span style="color: #e6db74">xeIrad+h1aClm/0n5uRJ6UnuWeqcZ6qPNtWIrtEDWA2uugfRnuwrdGZKXEciC2lnt3+aih2Xpgcp</span>
+<span style="color: #e6db74">whgeBHk8ky2qUUsVnm7ZKYn+YkCtBxfv0RpRhSWwZKEYJkn0NPV1Ai8h3iFKPgwZIszgsZIReyiK</span>
+<span style="color: #e6db74">Oyo2qagwFc+KKSxqLevEWcdUp/4OCT7bI3j6f4Nhx+hL1iaZvVLFk1eSscGc/royLbV/jjcxl72k</span>
+<span style="color: #e6db74">aATXtp0B0+l6SB+VLptPg62bQw==</span>
+
+<span style="color: #e6db74">2us0b5f42KfskOwxtLFSqEy6GKaZZrvOL5rmv9ZKWBSpthafk6MxMjFbXFd2ECpns2KNnViJqVR9</span>
+<span style="color: #e6db74">2BhfDjNyoCSmQAUImSKAIJC/YgW2ERfv0w9ahCHkdaJBcU3nIad2AzMpmnkCPhZdZsrttd9vNQ+I</span>
+<span style="color: #e6db74">LWY45q85B4qSKjwuZuTYDoVPu/MODzLaLHPmc4NlgqlH13KLtlOFk3eSsZOdrL4hJbV8lip9l/7r</span>
+<span style="color: #e6db74">exmdtr0B0+lsQhGLLphP0biQCb/6yLdmzc2MJ9tySXiX9XI0bMY8nAY3loynBsQo0A41yoR3M/m9</span>
+<span style="color: #e6db74">qCVVTymPbYArLlASBXzEYNTM3k4WlEzkB3Cgl3YOXP0uF85kaZCmgj59JdTfHEhWmbxGJ7IGH6kX</span>
+<span style="color: #e6db74">MheGHfQgKT9fpxCytErt5yu5yTX+lyk+aXf9fD3Ulk0CY509yWgWo2nW/rW56Q==</span>
+
+<span style="color: #e6db74">wOYuf56/3/Wzyrtwp+oB3Ei9TOqVcLydOpKj64gbSEv19VOlgvAqdHxKXVFjH2Nn8j7Y3Q7O5yBs</span>
+<span style="color: #e6db74">wwlfBSNvtySsQEtKzH6SddL+QUCsFhf32ghAiCf1MPgMYRqsf/VHFTM43jhHLAtYIdul5sseaVPL</span>
+<span style="color: #e6db74">bF4ktal8HIqANTgtI6WdGtcS/LUOOTLOMT3lf55xw69Mk2Ta6AWYnQOusZKMrLI2M+ZphiB9xaW0</span>
+<span style="color: #e6db74">O1mdtr0Mxb0oQBuKfY1HlOHJSP3oifA=</span>
+
+<span style="color: #e6db74">2O07Y42sz7vkiu4u7egB5kLuV6SdNayPNdWkrp5bFxWi+wSZhvd+IHlKDm9jDHQuvCqBnBPAnht8</span>
+<span style="color: #e6db74">kBUeHiM8sCrrVg4Z2CfUZpqxZwWmDULozB5fj26wRKZRIgj2IvVqHzU+3jlDLAwZJdbkvpxLdUCk</span>
+<span style="color: #e6db74">Kn4ktP0oGYaAank+LuDZS8dJvLtAAnfJMG/mc4NlgqpI0DnA+G7ExgOOtYqdrKs7JbVqjTA40+Ht</span>
+<span style="color: #e6db74">ZQaftp0B0+l7WRGLd8xFn6WMUO2j1ash0tjHLp5mXSve7z1td9srnDc9h96lDYBp3A9514lkdqqr</span>
+<span style="color: #e6db74">rDJAXjaFcYA9JwVoG3LEOtTs2QtUlU/iECax1nYuXP18Q8NqasTyhj48M8KbXllcnvAeaOsdAuxE</span>
+<span style="color: #e6db74">CxeLT/Q2JUhEplS/o1Ss6CHxySD/030fLCTwfS7UgERXOponzGgBtmnFt6SiomcTLEzpGKnYqyXV</span>
+<span style="color: #e6db74">yCOPLIVdYQ==</span>
+
+<span style="color: #e6db74">2es4LLK5zqfshqsr5+RO5EmrSuqMfa6Ae4ypvp5EFhax9VO4x/MsMXdKXAJhF3MpsGOGiB2GtRtk</span>
+<span style="color: #e6db74">kAkXDWZ5qSC5Qg4SmyuAKZr+eku6Ql70yx5UmyH8MK9WPkX+PawzBC9sij1Hfx1UI8zitZFNPkCK</span>
+<span style="color: #e6db74">Kio1rrh8H4qLMnVqL+uLWY9JrPMODjbOID38coRxgqFakyaGvRfY2luOvMGO6a0gKfpmzw==</span>
+
+<span style="color: #e6db74">2es4LLK5zqfshqsr5+RAqF63S76deOPOFZCp5Z57EBiy+wCIlPc7OTFGXQJtDXRnoWSNgkTO5zZ8</span>
+<span style="color: #e6db74">xF0IACNy5DykUEwOnW7JKI+3cUDzQk71yltfhi/7MK9KPl3xNfkzBygtinVGMFhAKculo5pLZECn</span>
+<span style="color: #e6db74">OXkoqLgvAs+eIzdmZvHOT4RIquldQXfRJGrxf59xjuhK0iCevVnf1lGJ+sGs5LpzNvB6mGUwmv/g</span>
+<span style="color: #e6db74">ekrc8Mkd3qwoXRuWfoBF0baaXKyo3/5118DFJdkzWWSX8nxifYB5/iAsw4uqF40lnh1wnoh9P6qo</span>
+<span style="color: #e6db74">rDZHXmCQZs80JBVoDWHPbofs30da0EKrBTGmjHYYVagoX8N1L5f/nS95LIvfH0dR0uhaKeZSGq1c</span>
+<span style="color: #e6db74">GgXSG/U9aD9EvUL6tFao6zzzyRj+wn0+bSH9Mi2b2V5Mfpc6yDwEvWiZt72ltDNBIkirBbWdsC+Z</span>
+<span style="color: #e6db74">3WaHM4xLb3ATtOEno+4kwybTItv0DHMgfF90dwo3oEIBFT4EyXht/gmmKqUH3+nqpNuKZVNuNm0/</span>
+<span style="color: #e6db74">luqszUFULuho1emuvPoXHjM1RbVfpVbaag4owD/KTWORtWfxEmGyOVHTj9dPiFPpIhIao69KuE/b</span>
+<span style="color: #e6db74">ryCTW6dp5XkAB64E3PSsQzufz49kHITrz4hNkXPn</span>
+
+<span style="color: #e6db74">2es4LJm027Kll/h4tPBH6hX/XaubJfjcYpTm5pMPLBGj+xWdhuR+PWIVDhZkGj52oWuL3wrS/hUp</span>
+<span style="color: #e6db74">nVBfPC555COnRAxckT2aZsi4dx3uB1b5j0wB0CGwPeMYBUD6cbN/ESdslyYYf0xfJIa0tZ5Na1fX</span>
+<span style="color: #e6db74">dWth6/B8JYeWZj8mJ+KLR5Qa769ID2+MIHzrKtowm6kJnn/OjF/Ok0WWtYbY5axpYKFug31slvDn</span>
+<span style="color: #e6db74">OV2Br4g=</span>
+
+<span style="color: #e6db74">3uYzeJa91KGljvkt87ZA5V7gGJ6QcLbOOJSo69NADhzmsh3Rhu06dH5aWgJtHiYmqnPInFKGswNo</span>
+<span style="color: #e6db74">whhfGzJ1qCnrTQoOnGPXL467cQWrDRfu1x5am2Djab1MNEWxcYF7ETRskzBDMQsZMtbkpN9PNRmK</span>
+<span style="color: #e6db74">Im9hsbh8GY6FIzdtMqXeQJdMuvxJCDOdLG6oaoJ2x6Zd2jOCtE6L0k3alYad4qt9YNxmkiw5lrHw</span>
+<span style="color: #e6db74">YQ+T24gdxKBwAV6NZolZ0aCNGe2/zLtz3NbCLp5yQ2+X9XVxYY44zjB4jZHkDIoskEpC28x6cvy5</span>
+<span style="color: #e6db74">5CBBSTaJdcUgaBIxTHvDKp320QtQgkzmVSS8nTtbE+olF9B0YYrvgDw8J9WQEwlBmvlfZLIQArgX</span>
+<span style="color: #e6db74">Cx6XFr05d3oLvFi/8V+s8iC2jCTh0i8lInfMejyN2UpQf9IvzikXt2Xb8PCrqytBOUbuUbmXrDjK</span>
+<span style="color: #e6db74">gSOcK4VXb3ATtOEho/Zg2C3VZsO4FDx0dl90aQE+vxtGBTMJhDAM/QjnKbdJ0qHkttuNYlltc35t</span>
+<span style="color: #e6db74">nLj/zgBJJe82kP7t8ewXUD56XKMTp0rAaBAo0DWaQGyDtSnxXS66cELTntdImUXwaQ==</span>
+
+<span style="color: #e6db74">1+oyYt+T36z2xKt6tOkBzg3jGIvYOO+/e9jm+p4CWCPm9lOjx65+DjECDmAiVSYd5CfIvR3N5yYp</span>
+<span style="color: #e6db74">nV0tRmZOoTWuRB9G2HaAa9yYNQj/Ixe3nyoTxGChMOMYCwiycYczXWAW3ngCHVgUZuSl/d98e03F</span>
+<span style="color: #e6db74">Hips5o9yUb2WNjwrMr+LFscN790OQHf8ZTCoS80vgvkJnnK0+BqL4QPX9LvYof8RYLgou2Vw08Ok</span>
+<span style="color: #e6db74">JErhtsRJ5A==</span>
+
+<span style="color: #e6db74">xKMqY5H/zvXpl+5i4KsB8UK7FOq2cKDAe7CwrsxWWAqvtRSdgqMzNX8PQVAiD2kqpWTImFWP5xxo</span>
+<span style="color: #e6db74">w10MHClzoGW/TQ4Vim7HNJOre0HzQlLs2glKhi71MLlQPgj3MKYzFi85mT1WfxlXZt/itZFaewiE</span>
+<span style="color: #e6db74">Pyolr7g4X8+xMy1qMe3OXIIAu/NLFHfVJGvtOotjy6RM137OoVjek1STuI3Y/6owI/BthWs=</span>
+
+<span style="color: #e6db74">3e84bYy9lPXEjasLtLNA+w29WbORe6jCe4aurp5cDAyruR+Ug6MrJH5BDkMiC2krsX6BgFPAsBxs</span>
+<span style="color: #e6db74">whgdEWZyoSS5SRJcwXeFZpO4NUSzDhfu2ghHyTPlcqRdMlzscbRwEyU8ijBGfwxRI571opBJKQGI</span>
+<span style="color: #e6db74">bGsy5rEzH4jTJypqMu3OV8dXqulLTTDUM3jmOowiwaBG2jGL9BfOxUaU9IierKs7JewoliAvlrHr</span>
+<span style="color: #e6db74">ZwbKtoge17ttDRGfLphIkLXfH6W1071khdjYa98zQ27W8zBhds020iY7ipGxEMQl2xxw0sIyROK1</span>
+<span style="color: #e6db74">qDYUTyiJcIAlJgM/CWGKKIH21V9fn03uEXz0kSJXROkvF81jeY3pmyhwOIeZC0dRk/FXJuYTG6BO</span>
+<span style="color: #e6db74">XxCeDuo9YTMLvFivohiu9CC8nSj/0H0iZDK4fS2cnFlVc4EtlisKvXjH9rSjpDMOP1erAqSLty/U</span>
+<span style="color: #e6db74">xGDIIo5BInANqOE9pPtwkSrUZs6xHmgga1Q3agEkp1ICUjYJgDBYsBnuNaEI0qzr4o+WaBZwb385</span>
+<span style="color: #e6db74">lqf/yxVOJfF8nq3H7u4XEnsuXb9ApQXdbhZ8hCjfTniGtW2lRma5OVXJhZBOkE2xZwhe6rdH+Vrb</span>
+<span style="color: #e6db74">tiGYTfV3+GxAB6ELm+m2ACeVjJRzF9D5w4kBnCeqBO3JU6j9ocU/AMmaB0XjMTd13Lh24kzDnOHn</span>
+<span style="color: #e6db74">MxBHhxTfYe2ki35XEOMP9WYpYBrhcn8S0EYi7uY8Jh6vploUBDM3XGyeNMdkK3YVB+EUPWs1lSuq</span>
+<span style="color: #e6db74">i0UMuFyqUoxik35l0T2H4KTD2C/hDuIA12nyEFjhfi1EztvK+shdVSd+wL7bLv0DDB1hy/N1w5PT</span>
+<span style="color: #e6db74">QGtE444gnmRwvhQrZ6vUCSspwQ6FNfIASiAvTs3GWV3ei5By/6GY5s0QTC8Vh9djHGVIPXAgqJ67</span>
+<span style="color: #e6db74">wOlVgyFR4CWpoDp+yZYfB8vUCsG07kUUVQ==</span>
+
+<span style="color: #e6db74">xKQrad+r37Dr3uostKVG7UO6GLqNe6yGe4GuudFaHxHmulOSiO09JnRbSwJ1GWor6iqlilPArxV/</span>
+<span style="color: #e6db74">1V0aBTZorSCvBQ4SjCfSI9y9eUyvERf7y1tHgSX9MK9WNQj3OKEzHi84ljxMOFhbM8qlsZZcdUC8</span>
+<span style="color: #e6db74">KX5hsrU5GJ3TNS04I+vMWo8ArvVKTSPVIHT6Op5yx61NkzOcvRfYx0qWuMGa7aw2JLVhj2U80+br</span>
+<span style="color: #e6db74">ewbXtp0B170oRA3ZbJlJnbXfE6P6yKttwMqCa/x2TmrC8ng0d8h5yD05l9LkF4wsx0pi14B+M+S5</span>
+<span style="color: #e6db74">sjZGGyKFI8E3aAM8HnzEKdT3xAtXgwPtFCOg2DcEE/EzQoJiboqmjD4y</span>
+
+<span style="color: #e6db74">yPU4foas0rzrmas2/KVVqEWvS+qZNa2LPJyopddBH1muugDRhu1+MX9LAAJLWHUioSqch1jAohpt</span>
+<span style="color: #e6db74">kB4QBS9yo2vrbEsPnSuAMpS7NUG+EFz02ghAyTPgYqtZNUHxNvszOWA/mzACOx1YMtar/tEOOg6B</span>
+<span style="color: #e6db74">bHMus/09A4rTJzUmZvHDT5MAvO9PAzPOZXTmOoVr0ehe0ivA</span>
+
+<span style="color: #e6db74">2eYueN+136b2n+wntPURvRT8FuqscLyae5ijuM1OHxzm6kPE3rFwdEVKXVYiFWM0t2uPih3R90Ew</span>
+<span style="color: #e6db74">glNfPCNvsGWmQBgPmSnFZs3uIBztTBfO2ghHyS31Y71ZNk2/YOUmSXJi3gFHLAwZK9v2o55JPkDU</span>
+<span style="color: #e6db74">fD949PN8JYqAMnknI/bYT4BF76oeWG6Paz3cf552gqVMwCGPv1KLghPP7dPWrIs2M+EojCAugPDj</span>
+<span style="color: #e6db74">bEqCptxQhOcoeRuKesxNlLKMHaq/mu8xkICeZQ==</span>
+
+<span style="color: #e6db74">zPB9dZCtmrThm/o39bBE5FTuSL+MOe+aM5Dmu8xAGhWjtlOYlKM9PH5GTUcsWEQysCqfih2BqwZs</span>
+<span style="color: #e6db74">0RkGSC1yqzLrUgMdjG7ZKYn+dFe6QlD11hVUyTT/MKpXfQj7Prs0BGA7m2oCHhRLI9/hqd9newOE</span>
+<span style="color: #e6db74">Iioyo7h8BYeWZjoiJ+zFDpVFrvhaBDjTfz38cogiwaBM3juNuVuLw1Gft5SK/7AhM7V8iSQp0+Lt</span>
+<span style="color: #e6db74">bgTS+skd3qwoQhCKa5gAnqffHaP637Nu0dDDJZIzSW7E6Hp6fcp5zyU9gJeiCoco0gZsnph9M+Wq</span>
+<span style="color: #e6db74">oSFDUyWMboAoJxchDzPLIJC4xE5Xg0zlW3CVlnYSXucoXs1vL5Dujy88KNTfH0VHl/1WMbIQG6VZ</span>
+<span style="color: #e6db74">Gx+cCL0hamoLvF/6pVCopja0hDH90n03YjO4fTuCkERXadI8yT0RuzaV5Liv5y4SbUnkGLOf4z7W</span>
+<span style="color: #e6db74">jWeBJsBPIXVBpaksvv8k2DCSKM2gEHVueRotbRFnr1YIUj8PxyxDsB7yKLRJz72r4rORfVMtNkU5</span>
+<span style="color: #e6db74">06OsghVVJb1rxeTs6OwLTT40QblSrAXBcxppynreTWGAo2DqXCL8akzWn5tIkE74KApF76ICrVOe</span>
+<span style="color: #e6db74">+zuZV/V96TUDQegU1OmqQyiCip5iFoP6jI8ZimKnDPfSC+HoutV6WceBVQD3IDN4yals+AuUifLj</span>
+<span style="color: #e6db74">PxRWnVY=</span>
+
+
+<span style="color: #e6db74">Upon further investigation, the following script was found:</span>
+<span style="color: #e6db74">&#39;&#39;&#39;</span>
+
+<span style="color: #75715e">#!/usr/bin/env python2</span>
+
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">os</span>
+
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">Crypto.Cipher.AES</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">Crypto.Util.Counter</span>
+
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">Messager</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">send</span>
+
+
+<span style="color: #f8f8f2">KEY</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">os</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">environ[</span><span style="color: #e6db74">&#39;key&#39;</span><span style="color: #f8f8f2">]</span>
+<span style="color: #f8f8f2">IV</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">os</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">environ[</span><span style="color: #e6db74">&#39;iv&#39;</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #f8f8f2">secrets</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">open(</span><span style="color: #e6db74">&#39;/tmp/exfil.txt&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;r&#39;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">pt</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">secrets:</span>
+    <span style="color: #75715e"># initialize our counter</span>
+    <span style="color: #f8f8f2">ctr</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Crypto</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Util</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Counter</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">new(</span><span style="color: #ae81ff">128</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">initial_value</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">long(IV</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode(</span><span style="color: #e6db74">&quot;hex&quot;</span><span style="color: #f8f8f2">),</span> <span style="color: #ae81ff">16</span><span style="color: #f8f8f2">))</span>
+
+    <span style="color: #75715e"># create our cipher</span>
+    <span style="color: #f8f8f2">cipher</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Crypto</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Cipher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">new(KEY,</span> <span style="color: #f8f8f2">Crypto</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Cipher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">MODE_CTR,</span> <span style="color: #f8f8f2">counter</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">ctr)</span>
+
+    <span style="color: #75715e"># encrypt the plaintext</span>
+    <span style="color: #f8f8f2">ciphertext</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">cipher</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encrypt(pt)</span>
+
+    <span style="color: #75715e"># send the ciphertext</span>
+    <span style="color: #f8f8f2">send(ciphertext</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode(</span><span style="color: #e6db74">&quot;base-64&quot;</span><span style="color: #f8f8f2">))</span>
+
+
+<span style="color: #e6db74">&#39;&#39;&#39;</span>
+<span style="color: #e6db74">Unfortunately, the environment variables used for KEY and IV are no longer recoverable</span>
+<span style="color: #e6db74">and the file /tmp/exfil.txt has been deleted.</span>
+
+<span style="color: #e6db74">Use your knowledge of how AES in CTR mode work to decrypt the ciphertexts and find the flag.&#39;&#39;&#39;</span>
+</pre></div>
+<p></p>
+<p>Before we get into it I should point out that in concept this is the exact same challenge as <a href="https://cryptopals.com/sets/3/challenges/20"><b>cryptopals 20</b></a>.</p>
+<p>In the file we get a bunch of ciphertexts that were all encrypted with <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation"><b>AES CTR</b></a> (a usually pretty safe way to encrypt things). The problem here is that the same key and nonce pair was used to encrypt all of them. First let's get a basic idea of how CTR works.</p>
+<img class="center" src="/assets/images/CTR.png">
+<p></p>
+<p>The point of CTR mode is to transform a block cipher into a stream cipher. It achieves this by encrypting successive values of a nonce (an arbitrary number used only once) instead of the plaintext, and then XORing the result with the plaintext. Since the ciphertexts we have were encrypted with the same key and nonce pair, if we concatenate them we can decrypt the result through <a href="https://en.wikipedia.org/wiki/Frequency_analysis"><b>frequency analysis</b></a>, as if it were encrypted using <a href="https://en.wikipedia.org/wiki/XOR_cipher#Use_and_security"><b>repeating key XOR</b></a>.</p>
+<p>Solver:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">base64</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">binascii</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">os</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">string</span>
+
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">Crypto.Cipher</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">AES</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">math</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">ceil</span>
+
+<span style="color: #f8f8f2">BLOCK_SIZE</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">16</span>
+
+<span style="color: #f8f8f2">ctBase64</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[</span><span style="color: #e6db74">&#39;2us8eN+xyfX3m+ouq+Rp51ruXKXYbKCbe5GjrddBHVm0vhKd2KMXMjFWQVclCmNnsGuEhFSOoFRo0hIKHGZrrCS/BRITjW7DJ5L+c0C6Dhu6yBNSnWDpf7sYMknxcaZ+FSwg0nVVNxlNZsfqpd9NOg7FOGsysrh8EIGXZiovI6mLWo9FobtcCDbRZXT7Op5rz7hFynKLtFLIx1GTt4CUrKw6J/tpjTZ9mv/wbBjD5Iwd060oTwfZd4NVg+GdDqyz1PA=&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;w+YyIN+r1brrm/li+7YB5Ey6XbjYbKCbfIej69lAEReh+weex/E7NX1GVEcuWGwyt37Ijk7AjlRt2RlTSDJ0pTHrUQMZiiuHNdy/NUG2BFH/zR5diiWwcqtMJk36P/V4Hi87lztFfwxRI571sYtGd0CEIm5hsbwwGoadIXk+LuCLXoZUp7U=&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;2es4LJm027Kll/h4tPBH6hX/XaubJfjcYpTm5pMPLBGj+xWdhuR+PWIVDhZkGj52oWuL3wrS/hUpnVBfPC555COnRAxckT2aZsi4dx3uB1b5j0wB0CGwPeMYBUD6cbN/ESdslyYYf0xfJIa0tZ5Na1fXdWth6/B8JYeWZj8mJ+KLR5Qa769ID2+MIHzrKtowm6kJnn/OjF/Ok0WWtYbY5axpYKFug31slvDnOV2Br4g=&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;wOYuf56/3/W9yLNxpeoB3Ei9TOqVcLydOpKj64YZQEr39VOlgvAqdHxKXVFjH2Nn/DzQ3AzO5yBswwlfBSNvtySsQEtEznaTd9L+QUCsFhf32ghAiCf1MPYOaRuuf/VHFTM43jhHLAtYIdul6MkWaFHLbF4ktal8HIqANTgtI6WTGN8T/rUOOTLOMT3lf55xw69Mk2rY4ASanQOusZKMrLI2M+ZphiB9y6e8Oludtr0Mxb0oQBuKfY1HlOHHSvXpi/A=&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;xKM8Yd+s0rClv/kh/K1V7U66FuqxNaycPpSyrtoPDBGj+z6Qk/E3LD8PZwJqGXAi5GiNilPAsBVgxBQRD2Z6qzfrXAQJ1m75KYn+fUSpBxf33hVKyTHldb1MOEfxIvVyHiRsij1NKh9RZsrttd9eKQ+GKXky5rU9As+SKi0vNODPDp5PuukODjjTNn7hdZhxzK1awH7OoVjek1GfuYCR4v86Mudtlyo+kvPocErb44QI2OcoaAyeYcAAgq6SGe213P5s3JnNJc1kSHnEoWR7bY4u1Tk0w4uqB4E7zR500Ig+M/mzqTYUVCbAd8ghJVAxA2aKOZ302gtYn1elVRO7ljUCQfo5WdZtdsimmTN1LcLfB0ZAgLxUIeABA+xGChOBG/Q3az9GqUn6s13t8i24ySz+xCl2fDLqZjCanEVWNtIx1D1Fvm3Mt7+45yoANA7lHqnYsS/YwWqSJswOJmVBuLJprfZ33mPGLsf0FXNzaho9cBYioFIQEzUUyQ==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;zPcpbZyzmrTx3u8j46oPqHi9XeqMfarOOpGiudtcC1n17F3I1bZpdCAfABAySzBn9TPb1hPS/0cpnV07B2ZyqzHrVw4MlDeAMpP+YU22ERf32ghAiCf1Pu55JVz+Mr4zETRsmjRVMVYZE83g8ItGPkCEKG4zo64vUdzEaGB4c7KLH9cO/asdW3eMfC6xNN86kegEkxaB+FnExwOIsZGU9f8nL7V8iSwu0/zhehnS8YxH&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;xeIrad+h1aClm/0n5uRJ6UnuWeqcZ6qPNtWIrtEDWA2uugfRnuwrdGZKXEciC2lnt3+aih2XpgcpwhgeBHk8ky2qUUsVnm7ZKYn+YkCtBxfv0RpRhSWwZKEYJkn0NPV1Ai8h3iFKPgwZIszgsZIReyiKOyo2qagwFc+KKSxqLevEWcdUp/4OCT7bI3j6f4Nhx+hL1iaZvVLFk1eSscGc/royLbV/jjcxl72kaATXtp0B0+l6SB+VLptPg62bQw==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;2us0b5f42KfskOwxtLFSqEy6GKaZZrvOL5rmv9ZKWBSpthafk6MxMjFbXFd2ECpns2KNnViJqVR92BhfDjNyoCSmQAUImSKAIJC/YgW2ERfv0w9ahCHkdaJBcU3nIad2AzMpmnkCPhZdZsrttd9vNQ+ILWY45q85B4qSKjwuZuTYDoVPu/MODzLaLHPmc4NlgqlH13KLtlOFk3eSsZOdrL4hJbV8lip9l/7rexmdtr0B0+lsQhGLLphP0biQCb/6yLdmzc2MJ9tySXiX9XI0bMY8nAY3loynBsQo0A41yoR3M/m9qCVVTymPbYArLlASBXzEYNTM3k4WlEzkB3Cgl3YOXP0uF85kaZCmgj59JdTfHEhWmbxGJ7IGH6kXMheGHfQgKT9fpxCytErt5yu5yTX+lyk+aXf9fD3Ulk0CY509yWgWo2nW/rW56Q==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;wOYuf56/3/Wzyrtwp+oB3Ei9TOqVcLydOpKj64gbSEv19VOlgvAqdHxKXVFjH2Nn8j7Y3Q7O5yBswwlfBSNvtySsQEtKzH6SddL+QUCsFhf32ghAiCf1MPgMYRqsf/VHFTM43jhHLAtYIdul5sseaVPLbF4ktal8HIqANTgtI6WdGtcS/LUOOTLOMT3lf55xw69Mk2Ta6AWYnQOusZKMrLI2M+ZphiB9xaW0O1mdtr0Mxb0oQBuKfY1HlOHJSP3oifA=&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;2O07Y42sz7vkiu4u7egB5kLuV6SdNayPNdWkrp5bFxWi+wSZhvd+IHlKDm9jDHQuvCqBnBPAnht8kBUeHiM8sCrrVg4Z2CfUZpqxZwWmDULozB5fj26wRKZRIgj2IvVqHzU+3jlDLAwZJdbkvpxLdUCkKn4ktP0oGYaAank+LuDZS8dJvLtAAnfJMG/mc4NlgqpI0DnA+G7ExgOOtYqdrKs7JbVqjTA40+HtZQaftp0B0+l7WRGLd8xFn6WMUO2j1ash0tjHLp5mXSve7z1td9srnDc9h96lDYBp3A9514lkdqqrrDJAXjaFcYA9JwVoG3LEOtTs2QtUlU/iECax1nYuXP18Q8NqasTyhj48M8KbXllcnvAeaOsdAuxECxeLT/Q2JUhEplS/o1Ss6CHxySD/030fLCTwfS7UgERXOponzGgBtmnFt6SiomcTLEzpGKnYqyXVyCOPLIVdYQ==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;2es4LLK5zqfshqsr5+RO5EmrSuqMfa6Ae4ypvp5EFhax9VO4x/MsMXdKXAJhF3MpsGOGiB2GtRtkkAkXDWZ5qSC5Qg4SmyuAKZr+eku6Ql70yx5UmyH8MK9WPkX+PawzBC9sij1Hfx1UI8zitZFNPkCKKio1rrh8H4qLMnVqL+uLWY9JrPMODjbOID38coRxgqFakyaGvRfY2luOvMGO6a0gKfpmzw==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;2es4LLK5zqfshqsr5+RAqF63S76deOPOFZCp5Z57EBiy+wCIlPc7OTFGXQJtDXRnoWSNgkTO5zZ8xF0IACNy5DykUEwOnW7JKI+3cUDzQk71yltfhi/7MK9KPl3xNfkzBygtinVGMFhAKculo5pLZECnOXkoqLgvAs+eIzdmZvHOT4RIquldQXfRJGrxf59xjuhK0iCevVnf1lGJ+sGs5LpzNvB6mGUwmv/gekrc8Mkd3qwoXRuWfoBF0baaXKyo3/5118DFJdkzWWSX8nxifYB5/iAsw4uqF40lnh1wnoh9P6qorDZHXmCQZs80JBVoDWHPbofs30da0EKrBTGmjHYYVagoX8N1L5f/nS95LIvfH0dR0uhaKeZSGq1cGgXSG/U9aD9EvUL6tFao6zzzyRj+wn0+bSH9Mi2b2V5Mfpc6yDwEvWiZt72ltDNBIkirBbWdsC+Z3WaHM4xLb3ATtOEno+4kwybTItv0DHMgfF90dwo3oEIBFT4EyXht/gmmKqUH3+nqpNuKZVNuNm0/luqszUFULuho1emuvPoXHjM1RbVfpVbaag4owD/KTWORtWfxEmGyOVHTj9dPiFPpIhIao69KuE/bryCTW6dp5XkAB64E3PSsQzufz49kHITrz4hNkXPn&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;2es4LJm027Kll/h4tPBH6hX/XaubJfjcYpTm5pMPLBGj+xWdhuR+PWIVDhZkGj52oWuL3wrS/hUpnVBfPC555COnRAxckT2aZsi4dx3uB1b5j0wB0CGwPeMYBUD6cbN/ESdslyYYf0xfJIa0tZ5Na1fXdWth6/B8JYeWZj8mJ+KLR5Qa769ID2+MIHzrKtowm6kJnn/OjF/Ok0WWtYbY5axpYKFug31slvDnOV2Br4g=&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;3uYzeJa91KGljvkt87ZA5V7gGJ6QcLbOOJSo69NADhzmsh3Rhu06dH5aWgJtHiYmqnPInFKGswNowhhfGzJ1qCnrTQoOnGPXL467cQWrDRfu1x5am2Djab1MNEWxcYF7ETRskzBDMQsZMtbkpN9PNRmKIm9hsbh8GY6FIzdtMqXeQJdMuvxJCDOdLG6oaoJ2x6Zd2jOCtE6L0k3alYad4qt9YNxmkiw5lrHwYQ+T24gdxKBwAV6NZolZ0aCNGe2/zLtz3NbCLp5yQ2+X9XVxYY44zjB4jZHkDIoskEpC28x6cvy55CBBSTaJdcUgaBIxTHvDKp320QtQgkzmVSS8nTtbE+olF9B0YYrvgDw8J9WQEwlBmvlfZLIQArgXCx6XFr05d3oLvFi/8V+s8iC2jCTh0i8lInfMejyN2UpQf9IvzikXt2Xb8PCrqytBOUbuUbmXrDjKgSOcK4VXb3ATtOEho/Zg2C3VZsO4FDx0dl90aQE+vxtGBTMJhDAM/QjnKbdJ0qHkttuNYlltc35tnLj/zgBJJe82kP7t8ewXUD56XKMTp0rAaBAo0DWaQGyDtSnxXS66cELTntdImUXwaQ==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;1+oyYt+T36z2xKt6tOkBzg3jGIvYOO+/e9jm+p4CWCPm9lOjx65+DjECDmAiVSYd5CfIvR3N5yYpnV0tRmZOoTWuRB9G2HaAa9yYNQj/Ixe3nyoTxGChMOMYCwiycYczXWAW3ngCHVgUZuSl/d98e03FHips5o9yUb2WNjwrMr+LFscN790OQHf8ZTCoS80vgvkJnnK0+BqL4QPX9LvYof8RYLgou2Vw08OkJErhtsRJ5A==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;xKMqY5H/zvXpl+5i4KsB8UK7FOq2cKDAe7CwrsxWWAqvtRSdgqMzNX8PQVAiD2kqpWTImFWP5xxow10MHClzoGW/TQ4Vim7HNJOre0HzQlLs2glKhi71MLlQPgj3MKYzFi85mT1WfxlXZt/itZFaewiEPyolr7g4X8+xMy1qMe3OXIIAu/NLFHfVJGvtOotjy6RM137OoVjek1STuI3Y/6owI/BthWs=&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;3e84bYy9lPXEjasLtLNA+w29WbORe6jCe4aurp5cDAyruR+Ug6MrJH5BDkMiC2krsX6BgFPAsBxswhgdEWZyoSS5SRJcwXeFZpO4NUSzDhfu2ghHyTPlcqRdMlzscbRwEyU8ijBGfwxRI571opBJKQGIbGsy5rEzH4jTJypqMu3OV8dXqulLTTDUM3jmOowiwaBG2jGL9BfOxUaU9IierKs7JewoliAvlrHrZwbKtoge17ttDRGfLphIkLXfH6W1071khdjYa98zQ27W8zBhds020iY7ipGxEMQl2xxw0sIyROK1qDYUTyiJcIAlJgM/CWGKKIH21V9fn03uEXz0kSJXROkvF81jeY3pmyhwOIeZC0dRk/FXJuYTG6BOXxCeDuo9YTMLvFivohiu9CC8nSj/0H0iZDK4fS2cnFlVc4EtlisKvXjH9rSjpDMOP1erAqSLty/UxGDIIo5BInANqOE9pPtwkSrUZs6xHmgga1Q3agEkp1ICUjYJgDBYsBnuNaEI0qzr4o+WaBZwb385lqf/yxVOJfF8nq3H7u4XEnsuXb9ApQXdbhZ8hCjfTniGtW2lRma5OVXJhZBOkE2xZwhe6rdH+VrbtiGYTfV3+GxAB6ELm+m2ACeVjJRzF9D5w4kBnCeqBO3JU6j9ocU/AMmaB0XjMTd13Lh24kzDnOHnMxBHhxTfYe2ki35XEOMP9WYpYBrhcn8S0EYi7uY8Jh6vploUBDM3XGyeNMdkK3YVB+EUPWs1lSuqi0UMuFyqUoxik35l0T2H4KTD2C/hDuIA12nyEFjhfi1EztvK+shdVSd+wL7bLv0DDB1hy/N1w5PTQGtE444gnmRwvhQrZ6vUCSspwQ6FNfIASiAvTs3GWV3ei5By/6GY5s0QTC8Vh9djHGVIPXAgqJ67wOlVgyFR4CWpoDp+yZYfB8vUCsG07kUUVQ==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;xKQrad+r37Dr3uostKVG7UO6GLqNe6yGe4GuudFaHxHmulOSiO09JnRbSwJ1GWor6iqlilPArxV/1V0aBTZorSCvBQ4SjCfSI9y9eUyvERf7y1tHgSX9MK9WNQj3OKEzHi84ljxMOFhbM8qlsZZcdUC8KX5hsrU5GJ3TNS04I+vMWo8ArvVKTSPVIHT6Op5yx61NkzOcvRfYx0qWuMGa7aw2JLVhj2U80+brewbXtp0B170oRA3ZbJlJnbXfE6P6yKttwMqCa/x2TmrC8ng0d8h5yD05l9LkF4wsx0pi14B+M+S5sjZGGyKFI8E3aAM8HnzEKdT3xAtXgwPtFCOg2DcEE/EzQoJiboqmjD4y&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;yPU4foas0rzrmas2/KVVqEWvS+qZNa2LPJyopddBH1muugDRhu1+MX9LAAJLWHUioSqch1jAohptkB4QBS9yo2vrbEsPnSuAMpS7NUG+EFz02ghAyTPgYqtZNUHxNvszOWA/mzACOx1YMtar/tEOOg6BbHMus/09A4rTJzUmZvHDT5MAvO9PAzPOZXTmOoVr0ehe0ivA&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;2eYueN+136b2n+wntPURvRT8FuqscLyae5ijuM1OHxzm6kPE3rFwdEVKXVYiFWM0t2uPih3R90EwglNfPCNvsGWmQBgPmSnFZs3uIBztTBfO2ghHyS31Y71ZNk2/YOUmSXJi3gFHLAwZK9v2o55JPkDUfD949PN8JYqAMnknI/bYT4BF76oeWG6Paz3cf552gqVMwCGPv1KLghPP7dPWrIs2M+EojCAugPDjbEqCptxQhOcoeRuKesxNlLKMHaq/mu8xkICeZQ==&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;zPB9dZCtmrThm/o39bBE5FTuSL+MOe+aM5Dmu8xAGhWjtlOYlKM9PH5GTUcsWEQysCqfih2BqwZs0RkGSC1yqzLrUgMdjG7ZKYn+dFe6QlD11hVUyTT/MKpXfQj7Prs0BGA7m2oCHhRLI9/hqd9newOEIioyo7h8BYeWZjoiJ+zFDpVFrvhaBDjTfz38cogiwaBM3juNuVuLw1Gft5SK/7AhM7V8iSQp0+LtbgTS+skd3qwoQhCKa5gAnqffHaP637Nu0dDDJZIzSW7E6Hp6fcp5zyU9gJeiCoco0gZsnph9M+WqoSFDUyWMboAoJxchDzPLIJC4xE5Xg0zlW3CVlnYSXucoXs1vL5Dujy88KNTfH0VHl/1WMbIQG6VZGx+cCL0hamoLvF/6pVCopja0hDH90n03YjO4fTuCkERXadI8yT0RuzaV5Liv5y4SbUnkGLOf4z7WjWeBJsBPIXVBpaksvv8k2DCSKM2gEHVueRotbRFnr1YIUj8PxyxDsB7yKLRJz72r4rORfVMtNkU506OsghVVJb1rxeTs6OwLTT40QblSrAXBcxppynreTWGAo2DqXCL8akzWn5tIkE74KApF76ICrVOe+zuZV/V96TUDQegU1OmqQyiCip5iFoP6jI8ZimKnDPfSC+HoutV6WceBVQD3IDN4yals+AuUifLjPxRWnVY=&#39;</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #f8f8f2">freqs</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span>
+      <span style="color: #e6db74">&#39;A&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0651738</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;B&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0124248</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;C&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0217339</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;D&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0349835</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;E&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.1241442</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;F&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0197881</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;G&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0158610</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;H&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0492888</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;I&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0558094</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;J&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0009033</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;K&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0050529</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;L&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0331490</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;M&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0202124</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;N&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0564513</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;O&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0596302</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;P&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0137645</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;Q&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0008606</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;R&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0497563</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;S&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0515760</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;T&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0729357</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;U&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0225134</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;V&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0082903</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;W&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0171272</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;X&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0013692</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;Y&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0145984</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39;Z&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.0007836</span><span style="color: #f8f8f2">,</span>
+      <span style="color: #e6db74">&#39; &#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #ae81ff">0.1918182</span>
+<span style="color: #f8f8f2">}</span>
+
+<span style="color: #f8f8f2">valid</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">string</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">ascii_uppercase</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">string</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">ascii_lowercase</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot; &quot;</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">singleByteXor</span><span style="color: #f8f8f2">(s,byte):</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">join(chr(s[i]</span><span style="color: #f92672">^</span><span style="color: #f8f8f2">byte)</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,len(s)))</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">score</span><span style="color: #f8f8f2">(s):</span>
+	<span style="color: #f8f8f2">sc</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">c</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">s:</span>
+		<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">c</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">valid:</span>
+			<span style="color: #f8f8f2">sc</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">freqs[c</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">upper()]</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">sc</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">xorStrings</span><span style="color: #f8f8f2">(data0,</span> <span style="color: #f8f8f2">data1):</span>
+	<span style="color: #f8f8f2">ret</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">join(binascii</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">unhexlify(hex(data0[i]</span><span style="color: #f92672">^</span><span style="color: #f8f8f2">data1[i])[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">rjust(</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">,b</span><span style="color: #e6db74">&#39;0&#39;</span><span style="color: #f8f8f2">))</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(min(len(data0),len(data1))))</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">ret</span>
+
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">decrypt</span><span style="color: #f8f8f2">(ct,key,nonce):</span>
+	<span style="color: #f8f8f2">aes</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">new(key,</span> <span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">MODE_ECB)</span>
+	<span style="color: #f8f8f2">keystream</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">join(aes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encrypt(nonce</span><span style="color: #f92672">+</span><span style="color: #f8f8f2">chr(ord(str(counter))</span><span style="color: #f92672">-</span><span style="color: #ae81ff">48</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">ljust(</span><span style="color: #ae81ff">8</span><span style="color: #f8f8f2">,</span><span style="color: #e6db74">&#39;</span><span style="color: #ae81ff">\x00</span><span style="color: #e6db74">&#39;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode())</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">counter</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(ceil(len(ct)</span><span style="color: #f92672">/</span><span style="color: #f8f8f2">BLOCK_SIZE)))</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">xorStrings(ct,keystream)</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">getBlocks</span><span style="color: #f8f8f2">(ciphertexts,</span> <span style="color: #f8f8f2">keySize):</span>
+	<span style="color: #f8f8f2">ret</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(keySize):</span>
+		<span style="color: #f8f8f2">block</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span>
+		<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">j</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(len(ciphertexts)):</span>
+			<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">&lt;</span> <span style="color: #f8f8f2">len(ciphertexts[j]):</span>
+				<span style="color: #f8f8f2">block</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">bytes([ciphertexts[j][i]])</span>
+			<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+				<span style="color: #66d9ef">continue</span>
+		<span style="color: #f8f8f2">ret</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(block)</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">ret</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">getKey</span><span style="color: #f8f8f2">(blocks):</span>
+	<span style="color: #f8f8f2">key</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">block</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">blocks:</span>
+		<span style="color: #f8f8f2">maxScore</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0</span>
+		<span style="color: #f8f8f2">keyGuess</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span>
+		<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span><span style="color: #ae81ff">256</span><span style="color: #f8f8f2">):</span>
+			<span style="color: #f8f8f2">curTry</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">singleByteXor(block,i)</span>
+			<span style="color: #f8f8f2">curScore</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">score(curTry)</span>
+			<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">curScore</span> <span style="color: #f92672">&gt;</span> <span style="color: #f8f8f2">maxScore:</span>
+				<span style="color: #f8f8f2">maxScore</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">curScore</span>
+				<span style="color: #f8f8f2">keyGuess</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes([i])</span>
+		<span style="color: #f8f8f2">key</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">keyGuess</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">key</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">():</span>
+	<span style="color: #f8f8f2">ciphertexts</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">ct</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">ctBase64:</span>
+		<span style="color: #f8f8f2">ciphertexts</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(base64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">b64decode(ct))</span>
+
+	<span style="color: #f8f8f2">keySize</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">len(max(ciphertexts,</span> <span style="color: #f8f8f2">key</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">len))</span>
+	<span style="color: #f8f8f2">blocks</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">getBlocks(ciphertexts,</span> <span style="color: #f8f8f2">keySize)</span>
+	<span style="color: #f8f8f2">keyGuess</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">getKey(blocks)</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(len(ciphertexts)):</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(xorStrings(ciphertexts[i],keyGuess))</span>
+
+<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">__name__</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;__main__&quot;</span><span style="color: #f8f8f2">:</span>
+	<span style="color: #f8f8f2">main()</span>
+</pre></div>
+<p></p>
+<p>Output:</p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;What is real? How do you define real? If you&#39;re talKing about what you can feel, what yox can smEll, what you Eanataste and see, then rea? is  :mply electrical signaAs inter~retEd by your brain.&quot;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;Neo, sooner or later you&#39;re going to realize, just As I did, that there&#39;s a difference bhtween kNowing the patN,  nd walking the path.&quot;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;The flag is: 4fb81eac0729a -- The flag is: 4fb81eac</span><span style="color: #ae81ff">\x10</span><span style="color: #e6db74">729a -- The flag is: 4fb81eac0729a -  The flAg is: 4fb81eaE07s9a -- The flag is: 4fb8beac0da9a -- The flag is: 4fO81eac07&lt;9a&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Message 86831. Test message 86831. Test message 868</span><span style="color: #ae81ff">\x13</span><span style="color: #e6db74">1. Test message 86831. Test message 56831. TEst message 86</span><span style="color: #ae81ff">\x1e</span><span style="color: #e6db74">31o Test message 86831. Te t me  age 86831. Test messaJe 86831  TeSt message 86831.&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;I am the Architect. I created the Matrix. I have beEn waiting for you. You have many que~tions aNd though the Vro&quot;ess has altered your co=scio&amp; ness, you remain irre[ocably fumaN. Ergo, some of my answNrs you wizl :nDerstand, som  of them you wilJ no;. Concurrentky, Phide 8oTr jirs! quEst on m5y be thi m st per;xne!t, y=u fay or 9ay no  r alizei i5 is . s&amp; thE D ss it7e  vao= &#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Attack at dawn. Use the address 37.9257 10.2036 193</span><span style="color: #ae81ff">\x19</span><span style="color: #e6db74">.283 - Do not reply to this message.-Attack At dawn. Use tNe  ddress 37.9257 10.2036 b939.ak3 - Do not reply to tEis messoge.&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Have you ever had a dream Neo, that you were so surE was real? What if you were unable tb wake fRom that dream</span><span style="color: #ae81ff">\x19</span><span style="color: #e6db74"> H.w would you know the di5fere=0e between the dream wBrld, anj thE real world?&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Which brings us at last to the moment of truth, wheRein the fundamental flaw is ultimateay expreSsed, and the gno,aly revealed as both be4inni=4 and end. There are tZo doors  ThE door to your right leaOs to the Eou=cE and the sal3ation of Zion. TNe d or to your lbft Keals #aBk xo t=e MAtr x, t; her anh t  the e!u o) you  s{ecies.&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Message 64023. Test message 64023. Test message 640</span><span style="color: #ae81ff">\x12</span><span style="color: #e6db74">3. Test message 64023. Test message ;4023. TEst message 64</span><span style="color: #ae81ff">\x16</span><span style="color: #e6db74">23o Test message 64023. Te t me  age 64023. Test messaJe 64023  TeSt message 64023.&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Unfortunately, no one can be told what the Matrix iS. You have to see it for yourself. Teis is yOur last chancC. </span><span style="color: #ae81ff">\x00</span><span style="color: #e6db74">fter this, there is no </span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">urni=4 back. You take the bAue pill&quot; thE story ends, you wake u[ in your tedoaNd believe wh$tever you want tI be#ieve. You tale tOe zedapHll  yo  stAy  n Wo:derland  a!d I sh f y u ho% dnep thetrabbi  h*le go s.&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;The Matrix is older than you know. I prefer countinG from the emergence of one integral lnomaly To the emergenEe .f the next, in which ca e th:  is the sixth version</span><span style="color: #ae81ff">\x03</span><span style="color: #e6db74">&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;The Matrix is a system, Neo. That system is our eneMy. But when you</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">re inside, you look lround, What do you seC? </span><span style="color: #ae81ff">\x03</span><span style="color: #e6db74">usiness men, teachers, ?awye! , carpenters. The verT minds af tHe people we are trying _o save. Bct :nTil we do, th se people are stOll . part of thas syTtee,  nE tdat 8akeS t!em o!r enemy&quot; Y u haveoeo :nder!taed, mos  of t&lt;es  peop)e  re n 8 ;eadY ]  ee s+p 0ggd- hAnD len- af Hh c a&amp;   otN+ufed  6  -oAel sTaQ dep &quot;E n  on A E </span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">8Sxe:  -ha  t EEr il# f g=&amp; &lt;O TrEttc  Htm&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;The flag is: 4fb81eac0729a -- The flag is: 4fb81eac</span><span style="color: #ae81ff">\x10</span><span style="color: #e6db74">729a -- The flag is: 4fb81eac0729a -  The flAg is: 4fb81eaE07s9a -- The flag is: 4fb8beac0da9a -- The flag is: 4fO81eac07&lt;9a&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Sentient programs. They can move in and out of any Software still hard-wired to their sy~tem. ThAt means that Gny.ne we haven</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">t unpluggedsis p&lt;</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">entially an Agent. In^ide the.MatRix, they are everyone aEd they ars n  One. We have 6urvived by hidinA fr m them, by rrnniIg nro, Uhea, b t tHeyiare  he gategee?ers. T</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">ty .re g</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">aroing al8 the 0oo7s, th y  re h  d ng AlEotoe m y?i wi m  mEaow  hot Oo*`ert*rsl5S r8 scm  n  Xs &quot;oNcO to --W   o fiR T  )Ea.&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Zion Keys: 8 - F - A - Q - 1 - Z - R - Z - B - Z - r - R - R. Repeat: 8 - F - A - Q - 1   Z - R </span><span style="color: #ae81ff">\r</span><span style="color: #e6db74"> Z - B - Z - t -aR - R. Repeat: 8 - F - </span><span style="color: #ae81ff">\x12</span><span style="color: #e6db74"> - Qs~ 1 - Z - R - Z - B - w - R - </span><span style="color: #ae81ff">\\</span><span style="color: #e6db74"> - r&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;I won&#39;t lie to you, Neo. Every single man or woman Who has stood their ground, everyone zho has Fought an agenR h s died. But where they ;ave 52iled, you will succeeI.&quot;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Please. As I was saying, she stumbled upon a solutiOn whereby nearly 99% of all test subgects acCepted the proAra, as long as they were g:ven 2schoice, even if they Zere onlw awAre of that choice at a Eear-unconeci uS level. Whil  this answer funEtio!ed, it was oevioRslq f4nEaminta9ly Fla&gt;ed,  hus cremti!g the  ehe=wise</span><span style="color: #ae81ff">\x7f</span><span style="color: #e6db74">coetradic ory s-st mic a+om ly t</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">-tiif LeO; rncn c</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74"> d l i t Thsaa e` tTee}ys  msi T lr. Ir&quot; ,etYos  SeIt re#9R dtthe E:Og&amp; M   di5e 5 m!NS &gt;tyc i/  &lt;c EcOeN fo!lE     x 5    .; e t$ 5t: gw5 $  E                                                                                                                                                                                                 &#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;I&#39;ve seen an agent punch through a concrete wall. MEn have emptied entire clips at them lnd hit Nothing but aiT. </span><span style="color: #ae81ff">\x18</span><span style="color: #e6db74">et their strength and t;eir  #eed are still based iC a worlj thAt is built on rules. BeHause of t~atc They will nev r be as strong oT asofast as you dan Ee.&quot;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;Everything that has a beginning has an end. I see tHe end coming. I see the darkness sprhading. i see death...</span><span style="color: #ae81ff">\x06</span><span style="color: #e6db74">an% you are all that stand  in ;:s way.&#39;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;Test message 10592. Test message 10592. Test messagE 10592. Test message 10592. Test mes~age 105</span><span style="color: #ae81ff">\x19</span><span style="color: #e6db74">2. Test messaAe p0592. Test message 1059a. Te &#39; message 10592. Test @essage ?059</span><span style="color: #ae81ff">\x12</span><span style="color: #e6db74">. Test message 10592.&quot;</span>
+<span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;As you adequately put, the problem is choice. But wE already know what you are going to io, don</span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">T we? Already o c n see the chain reactio=: th6schemical precursors tEat signol tHe onset of an emotion, Oesigned sfec&amp;fIcally to ove7whelm logic and Teas n. An emotioi thFt as  lSeahy b9indIngiyou  o the semp#e and  svi us t utc: she =s goi:g 1o dieean% the=)  s nOtA&amp;n` yi0 /$n e&amp;.&lt;o Stnt =t  HSp   I ei   O  euibt &lt;s nEia) OxEan d  T6i;n, s</span><span style="color: #ae81ff">\\</span><span style="color: #e6db74">%Ul  Nio&quot;</span><span style="color: #ae81ff">\x7f</span><span style="color: #e6db74">l  t&lt;e ;OI 4e  f 0o   /ReEtOse </span><span style="color: #ae81ff">\&#39;</span><span style="color: #e6db74">tSe-(:; i ;0ey  r 4e - e :   3 ,$T:b&#39;</span>
+</pre></div>
+<p></p>
+<p>By sending one of the "flags" from the output to the server we get the actuall flag.</p>
+<img class="center" src="/assets/images/adversarialFlag.png">
+<p><b>FLAG: flag{m1ss1on_acc00mpl11shheedd!!}</b></p>
+
+
+
