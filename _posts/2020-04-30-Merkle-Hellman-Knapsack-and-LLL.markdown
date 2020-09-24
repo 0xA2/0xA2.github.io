@@ -84,7 +84,7 @@ categories: "Project"
 
 <p>Now let's analyze how we can relate this to breaking the Merkle-Hellman knapsack.</p>
 
-<p>Suppose you have a 1xN matrix <b>X</b> and 1x1 matrix <b>Y</b> and want to figure ou the Nx1 solution matrix <b>S</b> to the matrix equation: <b>XS = Y</b>, where the entries of <b>S</b> can only be 0 or 1 (in the context of the Merkle-Hellman knapsack, <b>S</b> would be the plaintext the attacker is after).</p>
+<p>Suppose you have a 1xN matrix <b>X</b> and 1x1 matrix <b>Y</b> and want to figure out the Nx1 solution matrix <b>S</b> to the matrix equation: <b>XS = Y</b>, where the entries of <b>S</b> can only be 0 or 1 (in the context of the Merkle-Hellman knapsack, <b>S</b> would be the plaintext the attacker is after).</p>
 <p>Now consider the follwing matrices:</p>
 <pre>
 <p></p>
