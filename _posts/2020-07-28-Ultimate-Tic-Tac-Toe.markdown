@@ -319,6 +319,7 @@ grid-template-columns: repeat(3,auto);
 	<p></p>
 	<h4>Game play ends when either a player wins the global board or there are no legal moves remaining, in which case the game is a draw.</h4>
 	<p></p>
+	<p>You can find the source code <a href="https://github.com/0xA2/Ultimate-Tic-Tac-Toe"><b>[here]</b></a> if interested.</p>
 </div>
 
 <div class="restart" id="restart">
