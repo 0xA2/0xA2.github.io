@@ -10,20 +10,12 @@ categories: "Project"
 <p></p>
 <p><h3>Content:</h3></p>
 <ul>
-	<li><a href="#Motivation">Motivation</a></li>
 	<li><a href="#Merkle-Hellman">Merkle-Hellman Knapsack</a></li>
 	<li><a href="#LLL">LLL Algorithm</a></li>
 	<li><a href="#Implementation">About the implementation</a></li>
 	<li><a href="#Code">The actual code</a></li>
 </ul>
 <p><a name="Motivation"></a></p>
-<p></p>
-<hr style="border-top:1px solid #28323C;">
-<p></p>
-<p><h3>Motivation:</h3></p>
-<p></p>
-<p>A few months back I dug up an old Twitter account and thought it'd be fun to post nothing but encrypted messages using previously broken encryption methods and have friends and colleges try to recover the original plaintexts. After running through some of the more well known classic ciphers I figured I should try something more interesting and remembered reading about the Merkle-Hellman knapsack cryptosystem sometime last year. However, at this point I only vaguely remembered how it worked and even though I new it had been broken in the 80's by <a href="https://en.wikipedia.org/wiki/Adi_Shamir">Adi Shamir</a>, I didn't know the exact method he used to do it. So I decided to do some digging and thought that it would be fun (as well as a good learning method) to implement a version of the original Merkle-Hellman cryptosystem including an option to break a given ciphertext using Shamir's method.</p>
-<p><a name="Merkle-Hellman"></a></p>
 <p></p>
 <hr style="border-top:1px solid #28323C;">
 <p></p>
