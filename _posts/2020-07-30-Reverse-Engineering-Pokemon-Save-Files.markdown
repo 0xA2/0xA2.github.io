@@ -78,7 +78,7 @@ tr:nth-child(1) {
 <p></p>
 
 <p><b>Bypassing CRC checksum:</b><br>
-	Turns out the game uses an error detection algorithm to assure data integrity, causing our save file to become corrupted if we try to edit stuff(from the same<a href="https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_IV#Checksum"><b> Bulbapedia page</b></a> we know the algorithm used is <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check"><b>CRC-16-CCITT</b></a>). Basically, it calculates a checksum value based part of the contents of the save file (in this case it takes all the bytes in the small blocks except for the block's footer: it's last 20 bytes) and checks if said value is consistent. Good news is these kinds of algorithms aren't design to stop attackers. The checksum value is also stored in the save file so we can just:<br>
+	Turns out the game uses an error detection algorithm to assure data integrity, causing our save file to become corrupted if we try to edit stuff(from the same<a href="https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_IV#Checksum"><b> Bulbapedia page</b></a> we know the algorithm used is <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check"><b>CRC-16-CCITT</b></a>). Basically, it calculates a checksum value based on part of the contents of the save file (in this case it takes all the bytes in the small blocks except for the block's footer: it's last 20 bytes) and checks if said value is consistent. Good news is these kinds of algorithms aren't design to stop attackers. The checksum value is also stored in the save file so we can just:<br>
 	<ul>
 		<li>Implement the algorithm</li> 
 		<li>Make the changes we want to the save file</li> 
