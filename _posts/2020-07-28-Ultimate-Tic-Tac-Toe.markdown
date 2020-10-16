@@ -194,6 +194,7 @@ grid-template-columns: repeat(3,auto);
 <title>Ultimate Tic-Tac-Toe - LostMyPlaintext</title>
 <div class="well article">
 	<h1 style="text-align: center;">Ultimate Tic-Tac-Toe</h1>
+	<h5 style="text-align: center";>Note from the future: I just realized there are some visual bugs when using a browser that's not firefox, will fix soon.</h5>
 </div>
 
 <!-- Main Board  -->
