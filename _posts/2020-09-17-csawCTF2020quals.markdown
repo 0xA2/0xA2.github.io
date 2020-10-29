@@ -20,7 +20,7 @@ ul {
 
 <title>CSAW CTF 2020 Quals - Crypto Challenges - LostMyPlaintext</title>
 <img class="center" src="/assets/images/csaw.png">
-<p>Writeups for the crypto challenges I could solve from this years CSAW CTF.</p>
+<p>Writeups for some of the crypto challenges from this years CSAW CTF.</p>
 <hr style="border-top:1px solid #28323C;">
 <p><h3>Perfect Secrecy:</h3></p>
 <img class="center" src="/assets/images/perfectSecrecy.png">
