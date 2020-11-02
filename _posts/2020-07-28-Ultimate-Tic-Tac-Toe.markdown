@@ -27,10 +27,10 @@ categories: "Project"
 	background-color: black;
 	border: 5px solid white;
 	display: grid;
-	position: absolute;
+	position: relative;
 	justify-content: center;
-	justify-items: center;
-	align-items: center;
+  	justify-items: center;
+  	align-items: center;
 	grid-template-columns: repeat(3,auto);
 }
 
