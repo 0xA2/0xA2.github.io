@@ -22,15 +22,16 @@ categories: "Project"
 
 
 .microBoard {
-width:var(--big-square-size);
-height:var(--big-square-size);
-background-color: black;
-border: 5px solid white;
-display: grid;
-justify-content: center;
-justify-items: center;
-align-items: center;
-grid-template-columns: repeat(3,auto);
+	width:var(--big-square-size);
+	height:var(--big-square-size);
+	background-color: black;
+	border: 5px solid white;
+	display: grid;
+	position: absolute;
+	justify-content: center;
+	justify-items: center;
+	align-items: center;
+	grid-template-columns: repeat(3,auto);
 }
 
 .microBoard.x::before {
