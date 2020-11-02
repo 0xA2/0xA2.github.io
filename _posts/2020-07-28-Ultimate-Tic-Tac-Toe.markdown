@@ -195,7 +195,6 @@ categories: "Project"
 <title>Ultimate Tic-Tac-Toe - LostMyPlaintext</title>
 <div class="well article">
 	<h1 style="text-align: center;">Ultimate Tic-Tac-Toe</h1>
-	<h5 style="text-align: center;">Note from the future: Tested on Firefox and Chromium.</h5>
 </div>
 
 <!-- Main Board  -->
