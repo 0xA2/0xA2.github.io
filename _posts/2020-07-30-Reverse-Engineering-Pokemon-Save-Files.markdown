@@ -151,11 +151,11 @@ tr:nth-child(1) {
 <p></p>
 <img class="center" src="/assets/images/checksumoutput.png">
 <p></p>
-<p>The same values we find at addresses 0x4CF2A-0x4CF2B meaning we can be sure we found the checksum value. Now let's try changing all the "2b"s to "2d"s in the "A" file once more:</p>
+<p>The same values we find at addresses 0x4CF2A-0x4CF2B meaning we can be sure we found the correct value. Now let's try changing all the "2b"s to "2d"s in the "A" file once more:</p>
 <p></p>
 <img class="center" src="/assets/images/namechanged.png">
 <p></p>
-<p>Then we run the same program to calculate the new checksum:</p>
+<p>Then we run the same program to calculate the new value:</p>
 <p></p>
 <img class="center" src="/assets/images/newchecksum.png">
 <p></p>
