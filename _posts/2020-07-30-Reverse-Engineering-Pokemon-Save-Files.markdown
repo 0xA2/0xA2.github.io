@@ -159,7 +159,7 @@ tr:nth-child(1) {
 <p></p>
 <img class="center" src="/assets/images/newchecksum.png">
 <p></p>
-<p>And we edit the checksum within the file:</p>
+<p>And we edit it within the file:</p>
 <p></p>
 <img class="center" src="/assets/images/checksumchanged.png">
 <p></p>
