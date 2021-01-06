@@ -381,7 +381,7 @@ tr:nth-child(1) {
 		<li>And so on</li>
 	</ul>
 </p>
-<p>Now that we have bypassed the Pokemon data structure's encryption let's combine this with our general checksum bypass and try to edit a Pokemon's species id. We can play the game for a bit until we get our starter Pokemon and try to change it to a different Pokemon:</p>
+<p>Now that we have bypassed the Pokemon data structure's encryption let's combine this with our CRC bypass and try to edit a Pokemon's species id. We can play the game for a bit until we get our starter Pokemon and try to change it to a different Pokemon:</p>
 <p></p>
 <img class="center" src="/assets/images/glitch.png">
 <p></p>
