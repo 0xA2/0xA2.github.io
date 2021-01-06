@@ -39,7 +39,7 @@ tr:nth-child(1) {
 <p><h3>Content:</h3></p>
 <ul>
 	<li><a href="#Starting Point">Starting Point</a></li>
-	<li><a href="#Save file memory blocks and Bypassing CRC checksum">Save file memory blocks and Bypassing CRC checksum</a></li>
+	<li><a href="#Save file memory blocks and Bypassing CRC error detection">Save file memory blocks and Bypassing CRC checksum</a></li>
 	<li><a href="#The Pokemon data structure">The Pokemon data structure</a></li>
 	<li><a href="#Conclusion and future work">Conclusion and future work</a></li>
 </ul>
@@ -64,10 +64,10 @@ tr:nth-child(1) {
 <img class="center" src="/assets/images/savefiledeleted.png">
 <p></p>
 <p>... not exactly.</p>
-<p><a name="Save file memory blocks and Bypassing CRC checksum"></a></p>
+<p><a name="Save file memory blocks and Bypassing CRC error detection"></a></p>
 <p></p>
 <hr style="border-top:1px solid #28323C;">
-<p><h3>Save file memory blocks and Bypassing CRC checksum</h3></p>
+<p><h3>Save file memory blocks and Bypassing CRC error detection</h3></p>
 <p></p>
 <p><b>Save file memory blocks:</b><br>
 	Before we adress this issue a quick explanation of how information is laid out within the file. Save files are divided into two pairs of blocks, small blocks and big blocks (here you can see at what values they start and end): </p> 
@@ -77,8 +77,8 @@ tr:nth-child(1) {
 <p>(Note: it seems the first time you save the game all data stored in small blocks gets saved only to the second block. The second time you save the game it gets saved to the first block and your previous save remains in the second block. From there on out your most recent save always gets written to the fisrt block and the previous save to the second block. So it appears the game stores your last two saves at all times although I still need to fully confirm this.)</p>
 <p></p>
 
-<p><b>Bypassing CRC checksum:</b><br>
-	Turns out the game uses an error detection algorithm to assure data integrity, causing our save file to become corrupted if we try to edit stuff(from the same<a href="https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_IV#Checksum"><b> Bulbapedia page</b></a> we know the algorithm used is <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check"><b>CRC-16-CCITT</b></a>). Basically, it calculates a checksum value based on part of the contents of the save file (in this case it takes all the bytes in the small blocks except for the block's footer: it's last 20 bytes) and checks if said value is consistent. Good news is these kinds of algorithms aren't design to stop attackers. The checksum value is also stored in the save file so we can just:<br>
+<p><b>Bypassing CRC:</b><br>
+	Turns out the game uses an error detection algorithm to assure data integrity, causing our save file to become corrupted if we try to edit stuff(from the same<a href="https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_IV#Checksum"><b> Bulbapedia page</b></a> we know the algorithm used is <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check"><b>CRC-16-CCITT</b></a>). Basically, it calculates a value based on part of the contents of the save file (in this case it takes all the bytes in the small blocks except for the block's footer: it's last 20 bytes) and checks if said value is consistent. Good news is these kinds of algorithms aren't design to stop attackers. The checksum value is also stored in the save file so we can just:<br>
 	<ul>
 		<li>Implement the algorithm</li> 
 		<li>Make the changes we want to the save file</li> 
