@@ -48,7 +48,7 @@ tr:nth-child(1) {
 <hr style="border-top:1px solid #28323C;">
 <p><h3>Starting Point</h3></p>
 <p></p>
-<p>Before doing anything remotly exciting I obviously needed to be able to run the games on my computer. I decided to go with the <a href="http://desmume.org/"><b>DeSmuME</b></a> emulator as it was the easiest to get to run properly on my OS of choice. (Disclaimer: I do own physical copies of these games but if you're going to download them either way at least make sure you get them from a reputable source).</p>
+<p>Before doing anything remotely exciting I obviously needed to be able to run the games on my computer. I decided to go with the <a href="http://desmume.org/"><b>DeSmuME</b></a> emulator as it was the easiest to get to run properly on my OS of choice. (Disclaimer: I do own physical copies of these games but if you're going to download them either way at least make sure you get them from a reputable source).</p>
 <p></p>
 <p></p>
 <p><b>Getting Started With Reverse Engineering:</b><br>First I started two new save files, naming my character "AAAAAAA" in the first one and "BBBBBBB" in the second</p>
