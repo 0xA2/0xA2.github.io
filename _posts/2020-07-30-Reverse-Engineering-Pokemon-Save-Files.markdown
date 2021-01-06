@@ -83,9 +83,9 @@ tr:nth-child(1) {
 		<li>Implement the algorithm</li> 
 		<li>Make the changes we want to the save file</li> 
 		<li>Run the algorithm with the modified file to get the updated checksum value</li> 
-		<li>Switch the previous checksum value with the new one</li> 
+		<li>Switch the previous value with the new one</li> 
 	</ul>
-	According to Bulbapedia the checksum bytes should be at 0x0CF2A-0x0CF2B for the first small block and 0x4CF2A-0x4CF2B for the second. We can confirm there are two different pairs bytes in our "A" and "B" files at addresses 0x4CF2A-0x4CF2B (again the first block is still unused because we only saved once):</p>
+	According to Bulbapedia the resulting bytes should be at 0x0CF2A-0x0CF2B for the first small block and 0x4CF2A-0x4CF2B for the second. We can confirm there are two different pairs bytes in our "A" and "B" files at addresses 0x4CF2A-0x4CF2B (again the first block is still unused because we only saved once):</p>
 <p></p>
 <img class="center" src="/assets/images/checksum.png">
 <p></p>
