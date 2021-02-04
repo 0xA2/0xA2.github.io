@@ -78,18 +78,18 @@ tr:nth-child(1) {
 <p></p>
 
 <p><b>Bypassing CRC:</b><br>
-	Turns out the game uses an error detection algorithm to assure data integrity, causing our save file to become corrupted if we try to edit stuff(from the same<a href="https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_IV#Checksum"><b> Bulbapedia page</b></a> we know the algorithm used is <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check"><b>CRC-16-CCITT</b></a>). Basically, it calculates a value based on part of the contents of the save file (in this case it takes all the bytes in the small blocks except for the block's footer: it's last 20 bytes) and checks if said value is consistent. Good news is these kinds of algorithms aren't design to stop attackers. The checksum value is also stored in the save file so we can just:<br>
+	Turns out the game uses an error detection algorithm to assure data integrity, causing our save file to become corrupted if we try to edit stuff(from the same<a href="https://bulbapedia.bulbagarden.net/wiki/Save_data_structure_in_Generation_IV#Checksum"><b> Bulbapedia page</b></a> we know the algorithm used is <a href="https://en.wikipedia.org/wiki/Cyclic_redundancy_check"><b>CRC-16-CCITT</b></a>). Basically, it calculates a value based on part of the contents of the save file (in this case it takes all the bytes in the small blocks except for the block's footer: it's last 20 bytes) and checks if said value is consistent. Good news is these kinds of algorithms aren't design to stop attackers. This value is also stored in the save file so we can just:<br>
 	<ul>
 		<li>Implement the algorithm</li> 
 		<li>Make the changes we want to the save file</li> 
-		<li>Run the algorithm with the modified file to get the updated checksum value</li> 
+		<li>Run the algorithm with the modified file to get the updated value</li> 
 		<li>Switch the previous value with the new one</li> 
 	</ul>
-	According to Bulbapedia the resulting bytes should be at 0x0CF2A-0x0CF2B for the first small block and 0x4CF2A-0x4CF2B for the second. We can confirm there are two different pairs bytes in our "A" and "B" files at addresses 0x4CF2A-0x4CF2B (again the first block is still unused because we only saved once):</p>
+	According to Bulbapedia the resulting bytes should be at offsets 0x0CF2A-0x0CF2B for the first small block and 0x4CF2A-0x4CF2B for the second. We can confirm there are two different pairs bytes in our "A" and "B" files at addresses 0x4CF2A-0x4CF2B (again the first block is still unused because we only saved once):</p>
 <p></p>
 <img class="center" src="/assets/images/checksum.png">
 <p></p>
-<p>Let's make sure these values correspond to the checksum by implementing CRC-16-CCITT. There are <a href="https://en.wikipedia.org/wiki/Computation_of_CRC"><b>several ways</b></a> we can go about doing this, I opted for using a pre computed table (which I later realized is not necessarily optimal but for now let's go with it). Let's have the code print the values it calculates in hex (also note the values are stored in little-endian):</p>
+<p>Let's make sure these values correspond to the CRC output by implementing CRC-16-CCITT ourselves. There are <a href="https://en.wikipedia.org/wiki/Computation_of_CRC"><b>several ways</b></a> we can go about doing this, I opted for using a pre computed table (which I later realized is not necessarily optimal but for now let's go with it). Let's have the code print the values it calculates in hex (also note the values are stored in little-endian):</p>
 <p></p>
 
 <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">small_block_2</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0x40000</span>
