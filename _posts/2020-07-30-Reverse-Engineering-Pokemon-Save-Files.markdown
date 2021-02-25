@@ -170,7 +170,7 @@ tr:nth-child(1) {
 <p>Success!</p>
 <p></p>
 <hr style="border-top:1px solid #28323C;">
-<p><h5>*The Pokemon Encyclopedia</h5></p>
+<p><h5>*A well known Pokemon wiki</h5></p>
 <p><a name="The Pokemon data structure"></a></p>
 <hr style="border-top:1px solid #28323C;">
 <p><h3>The Pokemon data structure</h3></p>
