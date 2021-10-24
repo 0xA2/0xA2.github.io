@@ -89,7 +89,7 @@ tr:nth-child(1) {
 <p></p>
 <img class="center" src="/assets/images/checksum.png">
 <p></p>
-<p>Let's make sure these values correspond to the CRC output by implementing CRC-16-CCITT ourselves. There are <a href="https://en.wikipedia.org/wiki/Computation_of_CRC"><b>several ways</b></a> we can go about doing this, I opted for using a pre computed table (which I later realized is not necessarily optimal but for now let's go with it). Let's have the code print the values it calculates in hex (also note the values are stored in little-endian):</p>
+<p>Let's make sure these values correspond to the CRC output by implementing CRC-16-CCITT ourselves. There are <a href="https://en.wikipedia.org/wiki/Computation_of_CRC"><b>several ways</b></a> we can go about doing this, I opted for using a pre computed table. Let's have the code print the values it calculates in hex (also note the values are stored in little-endian):</p>
 <p></p>
 
 <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">small_block_2</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0x40000</span>
