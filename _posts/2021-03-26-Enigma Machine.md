@@ -67,7 +67,7 @@ The reflector works by reflecting the signal back through the rotors in a way th
 <!-- Ring Settings --->
 <p><h3>Ring Settings</h3></p>
 <p></p>
-<p>The ring setting is an additional setting that further increases the complexity of the encryption. The ring setting is related to the notches on the rotor and determines which contact points on the rotor will be engaged with the electrical contacts on the other rotors during encryption.
+<p>In the Enigma machine, the ring setting is an additional setting that further increases the complexity of the encryption. The ring setting is related to the notches on the rotor and determines which contact points on the rotor will be engaged with the electrical contacts on the other rotors during encryption.
 
 Each rotor in the Enigma machine has a series of notches cut into its circumference. These notches control when the rotor advances by one position during encryption, causing a shift in the electrical contacts engaged with the other rotors. By changing the position of the ring, the notches on the rotor are shifted relative to the starting position, which changes the electrical connections and further complicates the encryption.
 
@@ -81,7 +81,7 @@ The ring setting is usually set along with the rotor offset before encryption be
 <p></p>
 <p>To further enhance the security of the Enigma machine, it had a plugboard. The plugboard allowed the operator to swap letters before they were encrypted, adding another layer of complexity to the encryption process. The plugboard had ten pairs of plugs that could be used to swap letters, effectively increasing the number of possible configurations of the machine. Since there are 26 letters, up to 13 swaps can be done but typically only 10 were used. The plugboard was the main reason for the machine's very high number of possible outputs. The number of possible ways to connect the plugboard is now 150,738,274,937,250. Multiplying that by the other possible combinations above, we get that the overall number of possible paths a letter can take to be substituted is 158,962,555,217,826,360,000.</p>
 
-<img class="center" src="/assets/images/enigma3.jpg">
+<img class="center" src="/assets/images/enigma3.jpeg">
 
 
 <p>To decode an Enigma message, the receiver needed to know the exact settings of the rotors and the plugboard. The Germans changed these settings every day, which meant that the Allies had to break the code every day. The codebreakers at Bletchley Park in England, led by Alan Turing, were able to break the Enigma code by using a combination of mathematics, statistics, and a lot of hard work. You can find an implementation of the Enigma Machine, specifically <a href="https://github.com/0xA2/Enigma-Machine"><b> Enigma I, on my github. </b></a></p>
