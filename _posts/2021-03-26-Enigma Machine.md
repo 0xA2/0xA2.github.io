@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Enigma Machine"
-description: "Brief explanation of how the Enigma Machine funtions"
+description: "[project] Brief explanation of how the Enigma Machine funtions"
 categories: "Project"
 ---
 
