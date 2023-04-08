@@ -67,7 +67,7 @@ The reflector works by reflecting the signal back through the rotors in a way th
 <!-- Ring Settings --->
 <p><h3>Ring Settings</h3></p>
 <p></p>
-<p>In the Enigma machine, the ring setting is an additional setting that further increases the complexity of the encryption. The ring setting is related to the notches on the rotor and determines which contact points on the rotor will be engaged with the electrical contacts on the other rotors during encryption.
+<p>The ring setting is an additional setting that further increases the complexity of the encryption. The ring setting is related to the notches on the rotor and determines which contact points on the rotor will be engaged with the electrical contacts on the other rotors during encryption.
 
 Each rotor in the Enigma machine has a series of notches cut into its circumference. These notches control when the rotor advances by one position during encryption, causing a shift in the electrical contacts engaged with the other rotors. By changing the position of the ring, the notches on the rotor are shifted relative to the starting position, which changes the electrical connections and further complicates the encryption.
 
