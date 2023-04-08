@@ -33,7 +33,7 @@ tr:nth-child(1) {
 </style>
 
 <title>Enigma Machine - LostMyPlaintext</title>
-<p>Recently I was watching <a href="https://en.wikipedia.org/wiki/The_Imitation_Game"><b>The Imitation Game</b></a> and thoguht it would be fun to write an implementation of the Enigma Machine (based on <a href="https://en.wikipedia.org/wiki/Enigma_I"><b> Enigma I</b></a>)as well as a blog post about it.</p> 
+<p>Recently I was watching <a href="https://en.wikipedia.org/wiki/The_Imitation_Game"><b>The Imitation Game</b></a> and thoguht it would be fun to write an implementation of the Enigma Machine (based on <a href="https://en.wikipedia.org/wiki/Enigma_I"><b> Enigma I</b></a>) as well as a blog post about it.</p> 
 
 <hr style="border-top:1px solid #28323C;">
 <p><h3>The Basics</h3></p>
@@ -84,6 +84,6 @@ The ring setting is usually set along with the rotor offset before encryption be
 <img class="center" src="/assets/images/enigma3.jpg">
 
 
-<p>To decode an Enigma message, the receiver needed to know the exact settings of the rotors and the plugboard. The Germans changed these settings every day, which meant that the Allies had to break the code every day. The codebreakers at Bletchley Park in England, led by Alan Turing, were able to break the Enigma code by using a combination of mathematics, statistics, and a lot of hard work.</p>
+<p>To decode an Enigma message, the receiver needed to know the exact settings of the rotors and the plugboard. The Germans changed these settings every day, which meant that the Allies had to break the code every day. The codebreakers at Bletchley Park in England, led by Alan Turing, were able to break the Enigma code by using a combination of mathematics, statistics, and a lot of hard work. You can find an implementation of the Enigma Machine, specifically <a href="https://github.com/0xA2/Enigma-Machine"><b> Enigma I, on my github. </b></a></p>
 
 <p></p>
