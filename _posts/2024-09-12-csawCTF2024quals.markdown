@@ -386,7 +386,7 @@ A quick python script gets us our first flag for some easy points!</p>
 <p><h3>HexHex</h3></p>
 <img class="center" src="/assets/images/csaw24hexhex.png">
 <p></p>
-<p>For this challenge we get a huge file with mostly hex encoded text. There are two strings that jump out since they seem to use some other type of encoding. Looking at the same and description of the challenge we can guess that a <a href="https://www.dcode.fr/twin-hex-cipher"><b>Twin Hex Cipher</b></a> has been used on the two strings. Throwing them in a Twin Hex Cipher decoder gets us the flag.</p>
+<p>For this challenge we get a huge file with mostly hex encoded text. There are two strings that jump out since they seem to use some other type of encoding. Looking at the name and description of the challenge we can guess that a <a href="https://www.dcode.fr/twin-hex-cipher"><b>Twin Hex Cipher</b></a> has been used on the two strings. Throwing them in a Twin Hex Cipher decoder gets us the flag.</p>
 
 <div style="background: #272822; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 125%"><span style="color: #f8f8f2">flag:</span><span style="color: #e6db74">&quot;csawctf{hex3d_i7_w3l7_innit_hehe}&quot;</span>
 </pre></div>
